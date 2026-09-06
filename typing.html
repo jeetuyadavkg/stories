@@ -307,7 +307,7 @@
                 <span>फ़ॉन्ट: Mukta</span>
             </div>
             <div id="vtGuideBox" class="vt-guide">
-                <b>हिंदी गाइड:</b> पूर्ण विराम / Full Stop (।) | अल्पविराम / Comma (,) | प्रश्न चिन्ह / Question Mark (?) | आश्चर्य सूचक / Exclamation (!) | उपविराम / Colon (:) | अर्धविराम / Semicolon (;) | योजक चिन्ह / Hyphen (-) | निर्देशक चिन्ह / Dash (—) | उद्धरण चिन्ह / Quote (" ") | कोष्ठक / Parenthesis (() | नई पंक्ति / New Line | "बोल्ड" बोलें | "नॉर्मल" बोलें
+                <b>हिंदी गाइड:</b> पूर्ण विराम / Full Stop (.) | अल्पविराम / Comma (,) | प्रश्न चिन्ह / Question Mark (?) | आश्चर्य सूचक / Exclamation (!) | उपविराम / Colon (:) | अर्धविराम / Semicolon (;) | योजक चिन्ह / Hyphen (-) | निर्देशक चिन्ह / Dash (—) | उद्धरण चिन्ह / Quote (" ") | कोष्ठक / Parenthesis (() | नई पंक्ति / New Line | "बोल्ड" बोलें | "नॉर्मल" बोलें
             </div>
         </div>
     </div>
@@ -349,7 +349,7 @@
     var TXT_COPIED = "कॉपी हो गया!";
     var TXT_DL_EMPTY = "डाउनलोड के लिए पहले कुछ बोलें!";
 
-    var GUIDE_HI = "<b>हिंदी गाइड:</b> पूर्ण विराम / Full Stop (।) | अल्पविराम / Comma (,) | प्रश्न चिन्ह / Question Mark (?) | आश्चर्य सूचक / Exclamation (!) | उपविराम / Colon (:) | अर्धविराम / Semicolon (;) | योजक चिन्ह / Hyphen (-) | निर्देशक चिन्ह / Dash (—) | उद्धरण चिन्ह (\" \") | कोष्ठक / Parenthesis (() | नई पंक्ति / New Line | \"बोल्ड\" बोलें | \"नॉर्मल\" बोलें";
+    var GUIDE_HI = "<b>हिंदी गाइड:</b> पूर्ण विराम / Full Stop (.) | अल्पविराम / Comma (,) | प्रश्न चिन्ह / Question Mark (?) | आश्चर्य सूचक / Exclamation (!) | उपविराम / Colon (:) | अर्धविराम / Semicolon (;) | योजक चिन्ह / Hyphen (-) | निर्देशक चिन्ह / Dash (—) | उद्धरण चिन्ह (\" \") | कोष्ठक / Parenthesis (() | नई पंक्ति / New Line | \"बोल्ड\" बोलें | \"नॉर्मल\" बोलें";
     var GUIDE_EN = "<b>English Guide:</b> Period (.) | Comma (,) | Question Mark (?) | Exclamation (!) | Colon (:) | Semicolon (;) | Apostrophe (') | Open/Close Quote (\") | Open/Close Parenthesis (() | Open/Close Square ([]) | Open/Close Curly ({}) | Hyphen (-) | Dash (—) | Slash (/) | Backslash (\\) | Ampersand (&) | Asterisk (*) | Underscore (_) | New Line | Say \"Bold\" | Say \"Normal\"";
 
     var PARA_CMD_REGEX = /(?:नया\s*अनुच्छेद|नया\s*पैराग्राफ|new\s*paragraph|new\s*para|naya\s*paragraph|naya\s*para)/gi;
@@ -415,58 +415,36 @@
         text = text.replace(/(पुलिस|कांस्टेबल|कॉन्स्टेबल|रेलवे|दरोगा|शिक्षक|नई|सीधी|असिस्टेंट|क्लर्क|ग्रुप|विभाग|सरकारी)\s+भारती/gi, "$1 भर्ती");
         text = text.replace(/भारती\s+(प्रक्रिया|बोर्ड|विज्ञापन|सूचना|नोटिफिकेशन|नियम|आवेदन|फॉर्म|परीक्षा|अपडेट)/gi, "भर्ती $1");
 
-        if (currentLang === 'hi-IN') {
-            text = text.replace(/पूर्ण\s*विराम|फुल\s*स्टॉप|फुलस्टॉप|full\s*stop|period|point/gi, "।");
-            text = text.replace(/अल्पविराम|अल्प\s*विराम|कोमा|कॉमा|comma|coma/gi, ",");
-            text = text.replace(/प्रश्न\s*चिन्ह|प्रश्नवाचक\s*चिन्ह|प्रश्न\s*वाचक|क्वेश्कन\s*मार्क|question\s*mark/gi, "?");
-            text = text.replace(/आश्चर्य\s*सूचक|विस्मयादिबोधक|विस्मय\s*सूचक|एक्सक्लेमेशन\s*मार्क|exclamation\s*mark/gi, "!");
-            text = text.replace(/उपविराम|विसर्ग|विराम|colon/gi, ":");
-            text = text.replace(/अर्धविराम|अर्ध\s*विराम|semicolon/gi, ";");
-            text = text.replace(/अपॉस्ट्रोफी|apostrophe/gi, "'");
-            text = text.replace(/उद्धरण\s*चिन्ह|इन्वर्टर\s*कॉमा|ओपन\s*कोट|ओपनिंग\s*कोट|open\s*quote|opening\s*quote|close\s*quote|closing\s*quote/gi, "\"");
-            text = text.replace(/कोष्टक\s*शुरू|ओपन\s*पैराथेसिस|ओपन\s*ब्रैकेट|open\s*parenthesis|open\s*bracket/gi, "(");
-            text = text.replace(/कोष्टक\s*बंद|क्लोज\s*पैराथेसिस|बंद\s*ब्रैकेट|क्लोज\s*ब्रैकेट|close\s*parenthesis|close\s*bracket/gi, ")");
-            text = text.replace(/मंजला\s*कोष्टक\s*शुरू|open\s*curly\s*bracket/gi, "{");
-            text = text.replace(/मंजला\s*कोष्टक\s*बंद|close\s*curly\s*bracket/gi, "}");
-            text = text.replace(/बड़ा\s*कोष्टक\s*शुरू|open\s*square\s*bracket/gi, "[");
-            text = text.replace(/बड़ा\s*कोष्टक\s*बंद|close\s*square\s*bracket/gi, "]");
-            text = text.replace(/योजक\s*चिन्ह|हाइफन|hyphen/gi, "-");
-            text = text.replace(/निर्देशक\s*चिन्ह|dash/gi, "—");
-            text = text.replace(/स्लैश|तिरछी\s*रेखा|फॉरवर्ड\s*स्लैश|forward\s*slash/gi, "/");
-            text = text.replace(/संकेत\s*चिन्ह|स्टार|एस्टरिसक|asterisk/gi, "*");
-            text = text.replace(/बराबर|तुल्यता\s*सूचक|equal/gi, "=");
-            text = text.replace(/नई\s*पंक्ति|न्यू\s*लाइन|नेक्स्ट\s*लाइन|new\s*line|next\s*line/gi, "\n");
-        } else {
-            text = text.replace(/full\s*stop|period|point/gi, ".");
-            text = text.replace(/comma|coma/gi, ",");
-            text = text.replace(/question\s*mark/gi, "?");
-            text = text.replace(/exclamation\s*(mark|point)?/gi, "!");
-            text = text.replace(/colon/gi, ":");
-            text = text.replace(/semicolon/gi, ";");
-            text = text.replace(/apostrophe/gi, "'");
-            text = text.replace(/open\s*quote|opening\s*quote|close\s*quote|closing\s*quote/gi, "\"");
-            text = text.replace(/open\s*single\s*quote/gi, "'");
-            text = text.replace(/close\s*single\s*quote/gi, "'");
-            text = text.replace(/open\s*parenthesis|open\s*bracket|bracket\s*open/gi, "(");
-            text = text.replace(/close\s*parenthesis|close\s*bracket|bracket\s*close/gi, ")");
-            text = text.replace(/open\s*square\s*bracket/gi, "[");
-            text = text.replace(/close\s*square\s*bracket/gi, "]");
-            text = text.replace(/open\s*curly\s*bracket/gi, "{");
-            text = text.replace(/close\s*curly\s*bracket/gi, "}");
-            text = text.replace(/hyphen/gi, "-");
-            text = text.replace(/dash/gi, "—");
-            text = text.replace(/forward\s*slash/gi, "/");
-            text = text.replace(/backslash/gi, "\\");
-            text = text.replace(/ampersand/gi, "&");
-            text = text.replace(/asterisk/gi, "*");
-            text = text.replace(/equal/gi, "=");
-            text = text.replace(/underscore/gi, "_");
-            text = text.replace(/new\s*line|next\s*line/gi, "\n");
-        }
+        text = text.replace(/(?:\s*)(?:पूर्ण\s*विराम)(?:\s*चिन्ह)?(?=\s|$|\b)/gi, "।");
+        text = text.replace(/(?:\s*)(?:period|full\s*stop|point|फुलस्टॉप|फुल\s*स्टॉप|डॉट|\b(?:fu(?:l|ll)[\s\-_]*stop|fullstop|period|dot)\b)(?:\s*चिन्ह)?(?=\s|$|\b)/gi, ".");
+        text = text.replace(/(?:\s*)(?:कॉमा|कोमा|अल्प\s*विराम|अल्पविराम|comma|coma)(?:\s*चिन्ह)?(?=\s|$|\b)/gi, ",");
+        text = text.replace(/(?:\s*)(?:प्रश्न\s*वाचक|प्रश्न\s*चिन्ह|प्रश्नवाचक\s*चिन्ह|क्वेश्कन\s*मार्क|question\s*mark)(?:\s*चिन्ह)?(?=\s|$|\b)/gi, "?");
+        text = text.replace(/(?:\s*)(?:विस्मय\s*(बोधक|सूचक)|आश्चर्य\s*सूचक|विस्मयादिबोधक|एक्सक्लेमेशन\s*(?:मार्क|पॉइंट)|exclamation\s*(?:mark|point))(?:\s*चिन्ह)?(?=\s|$|\b)/gi, "!");
+        text = text.replace(/(?:\s*)(?:कोलन|उपविराम|colon)(?=\s|$|\b)/gi, ":");
+        text = text.replace(/(?:\s*)(?:सेमीकोलन|अर्धविराम|semicolon)(?=\s|$|\b)/gi, ";");
+        text = text.replace(/(?:\s*)(?:अपॉस्ट्रोफी|apostrophe)(?=\s|$|\b)/gi, "'");
+        text = text.replace(/(?:\s*)(?:ओपन\s*कोट|ओपनिंग\s*कोट|उद्धरण\s*चिन्ह|open\s*quote|opening\s*quote)(?=\s|$|\b)/gi, "\"");
+        text = text.replace(/(?:\s*)(?:क्लोज\s*कोट|क्लोजिंग\s*कोट|close\s*quote|closing\s*quote)(?=\s|$|\b)/gi, "\"");
+        text = text.replace(/(?:\s*)(?:ओपन\s*सिंगल\s*कोट|open\s*single\s*quote)(?=\s|$|\b)/gi, "'");
+        text = text.replace(/(?:\s*)(?:क्लोज\s*सिंगल\s*कोट|close\s*single\s*quote)(?=\s|$|\b)/gi, "'");
+        text = text.replace(/(?:\s*)(?:ओपन\s*(?:पैराथेसिस|ब्रैकेट|कोष्टक)|कोष्ठक\s*शुरू|open\s*(?:parenthesis|bracket))(?=\s|$|\b)/gi, "(");
+        text = text.replace(/(?:\s*)(?:क्लोज\s*(?:पैराथेसिस|ब्रैकेट|कोष्टक)|कोष्ठक\s*बंद|बंद\s*(?:ब्रैकेट|कोष्टक)|close\s*(?:parenthesis|bracket))(?=\s|$|\b)/gi, ")");
+        text = text.replace(/(?:\s*)(?:ओपन\s*स्क्वायर\s*ब्रैकेट|open\s*square\s*bracket)(?=\s|$|\b)/gi, "[");
+        text = text.replace(/(?:\s*)(?:क्लोज\s*स्क्वायर\s*ब्रैकेट|close\s*square\s*bracket)(?=\s|$|\b)/gi, "]");
+        text = text.replace(/(?:\s*)(?:ओपन\s*कर्ली\s*ब्रैकेट|open\s*curly\s*bracket)(?=\s|$|\b)/gi, "{");
+        text = text.replace(/(?:\s*)(?:क्लोज\s*कर्ली\s*ब्रैकेट|close\s*curly\s*bracket)(?=\s|$|\b)/gi, "}");
+        text = text.replace(/(?:\s*)(?:हाइफन|डैश|योजक\s*चिन्ह|hyphen|dash)(?=\s|$|\b)/gi, "-");
+        text = text.replace(/(?:\s*)(?:निर्देशक\s*चिन्ह)(?=\s|$|\b)/gi, "—");
+        text = text.replace(/(?:\s*)(?:फॉरवर्ड\s*स्लैश|स्लैश|तिरछी\s*रेखा|forward\s*slash)(?=\s|$|\b)/gi, "/");
+        text = text.replace(/(?:\s*)(?:बैकस्लैश|backslash)(?=\s|$|\b)/gi, "\\");
+        text = text.replace(/(?:\s*)(?:एम्परसैंड|ampersand)(?=\s|$|\b)/gi, "&");
+        text = text.replace(/(?:\s*)(?:एस्टरिसक|स्टार|संकेत\s*चिन्ह|asterisk)(?=\s|$|\b)/gi, "*");
+        text = text.replace(/(?:\s*)(?:अंडरस्कोर|underscore)(?=\s|$|\b)/gi, "_");
+        text = text.replace(/(?:\s*)(?:न्यू\s*लाइन|नेक्स्ट\s*लाइन|नई\s*लाइन|नई\s*पंक्ति|new\s*line)(?=\s|$|\b)/gi, "\n");
 
         text = text.replace(/\n[ \t]+/g, "\n");
-        text = text.replace(/\s+([।.,?\!:)\]}%\/\\&*_\-=—])/g, "$1");
-        text = text.replace(/([।.,?\!:)\]}%\/\\&*_\-=—])(?=[^\s\n।.,?\!:)\]}%\/\\&*_\-=—])/g, "$1 ");
+        text = text.replace(/\s+([।.,?\!:)\]}%\/\\&*_\-])/g, "$1");
+        text = text.replace(/([।.,?\!:)\]}%\/\\&*_\-])(?=[^\s\n।.,?\!:)\]}%\/\\&*_\-])/g, "$1 ");
         text = text.replace(/(\(|\{|\[)\s+/g, "$1");
         text = text.replace(/\s+(\)|\}|\])/g, "$1");
         text = text.replace(/(^|[^\s\n])(\(|\{|\[)/g, "$1 $2");
@@ -535,29 +513,25 @@
 
     function processVoiceCommands(rawText) {
         var text = cleanPunctuation(rawText);
-
-        var normalRegex = /(?:नॉर्मल|साधारण|normal|unbold|बोल्ड\s*बंद|bold\s*close|bold\s*stop)\s*(.*)$/i;
+        var normalRegex = /(?:^|\s*)(?:नॉर्मल|\bnormal\b|अनबोल्ड|\bunbold\b|(?:बोल्ड|बुलेट)\s*(बंद|क्लोज़?|एंड)|\b(?:bold|bullet)\s*(?:close|end|stop)\b)\s*(.*)$/i;
         if (normalRegex.test(text)) {
             var matchNorm = text.match(normalRegex);
             isBoldMode = false;
             isBulletMode = false;
             return { bold: false, bullet: false, content: cleanPunctuation(matchNorm[1] || "") };
         }
-
-        var bulletRegex = /(?:बुलेट|bullet\s*points?)\s*(.*)$/i;
+        var bulletRegex = /(?:^|\s*)(?:बुलेट(?:\s*पॉइंट्स?|\s)?|\bbullet(?:\s*points?)?\b)\s*(.*)$/i;
         if (bulletRegex.test(text)) {
             var matchBullet = text.match(bulletRegex);
             isBulletMode = true;
             return { bold: isBoldMode, bullet: true, content: cleanPunctuation(matchBullet[1] || "") };
         }
-
-        var boldRegex = /(?:बोल्ड|bold)\s*(.*)$/i;
+        var boldRegex = /(?:^|\s*)(?:बोल्ड|\bbold\b)\s*(.*)$/i;
         if (boldRegex.test(text)) {
             var matchBold = text.match(boldRegex);
             isBoldMode = true;
             return { bold: true, bullet: isBulletMode, content: cleanPunctuation(matchBold[1] || "") };
         }
-
         return { bold: isBoldMode, bullet: isBulletMode, content: text };
     }
 
@@ -584,7 +558,7 @@
             }
 
             var textToInsert = clean;
-            var startsWithPunct = /^[।.,?\!:)\]}%\/\\&*_\-=—]/.test(clean);
+            var startsWithPunct = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(clean);
 
             if (bullet) {
                 if (!beforeText.endsWith("\n") && beforeText.length > 0) {
@@ -612,7 +586,7 @@
 
             if (afterText.length > 0) {
                 var nextChar = afterText.charAt(0);
-                if (!/[ \n\t।.,?\!:)\]}%\/\\&*_\-=—]/.test(nextChar) && !textToInsert.endsWith(" ")) {
+                if (!/[ \n\t।.,?\!:)\]}%\/\\&*_\-]/.test(nextChar) && !textToInsert.endsWith(" ")) {
                     textToInsert = textToInsert + " ";
                 }
             }
@@ -632,7 +606,7 @@
                 clean = clean.replace(/^\n\n+/, "\n");
             }
 
-            var startsWithPunctEnd = /^[।.,?\!:)\]}%\/\\&*_\-=—]/.test(clean);
+            var startsWithPunctEnd = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(clean);
             if (startsWithPunctEnd) {
                 trimTrailingSpaceFromDOM();
                 curText = txtArea.innerText;
@@ -731,7 +705,7 @@
                         prefixRange.setEnd(activeUserRange.startContainer, activeUserRange.startOffset);
                         var beforeTextLive = prefixRange.toString();
 
-                        var startsWithPunctLive = /^[।.,?\!:)\]}%\/\\&*_\-=—]/.test(processedLive.content);
+                        var startsWithPunctLive = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(processedLive.content);
                         var isNewlineStartLive = /^[\n]/.test(processedLive.content);
                         
                         var needsSpaceLive = beforeTextLive.length > 0 && 
@@ -752,7 +726,7 @@
                         activeUserRange.insertNode(interimSpan);
                     } else {
                         var curTextLive = txtArea.innerText;
-                        var startsWithPunctLiveEnd = /^[।.,?\!:)\]}%\/\\&*_\-=—]/.test(processedLive.content);
+                        var startsWithPunctLiveEnd = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(processedLive.content);
                         var isNewlineStartLiveEnd = /^[\n]/.test(processedLive.content);
                         
                         var needsSpaceLiveEnd = curTextLive.length > 0 && 
@@ -887,12 +861,16 @@
     }
 
     window.vtClearTxt = function() {
-        txtArea.innerHTML = "";
-        activeUserRange = null;
-        isBoldMode = false;
-        isBulletMode = false;
-        localStorage.removeItem("vt_saved_html");
-        updateCounts();
+        var rawText = (txtArea.innerText || "").trim();
+        if (!rawText) return;
+        if (confirm("क्या आप वाकई सारा टेक्स्ट साफ़ करना चाहते हैं?")) {
+            txtArea.innerHTML = "";
+            activeUserRange = null;
+            isBoldMode = false;
+            isBulletMode = false;
+            localStorage.removeItem("vt_saved_html");
+            updateCounts();
+        }
     };
 
     window.vtDownloadTxt = function() {
