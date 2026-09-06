@@ -1,0 +1,1114 @@
+<!-- Voice Typing Tool for Blogger (Matching Guidelines) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    /* 1. ब्राउज़र और थीम के डिफ़ॉल्ट स्क्रोलबार व एलिमेंट्स को लॉक करें */
+    html, body {
+        overflow: hidden !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    header, footer, nav, aside, #header, #footer, #sidebar, #sidebar-wrapper, 
+    .sidebar, .sidebar-wrapper, .sidebar-container, .header-widget, .blog-pager, 
+    .post-title, .entry-title, .post-header, .comments, #comments, .breadcrumbs {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        visibility: hidden !important;
+    }
+
+    /* 2. 100% फुल स्क्रीन ओवरले */
+    .vt-screen-overlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background-color: #f1f5f9 !important;
+        z-index: 999999 !important;
+        margin: 0 !important;
+        padding: 8px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        overflow: hidden !important;
+    }
+
+    .vt-screen-overlay * {
+        box-sizing: border-box;
+        font-family: 'Mukta', sans-serif;
+    }
+
+    .vt-box {
+        width: 100%;
+        height: 100%;
+        background: #ffffff;
+        padding: 10px 12px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    /* हेडर रो */
+    .vt-header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    .vt-box h2 {
+        margin: 0;
+        color: #0f172a;
+        font-size: 1.15rem;
+        line-height: 1.1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .vt-lang-switch {
+        display: flex;
+        background: #e2e8f0;
+        border-radius: 6px;
+        padding: 2px;
+        flex-shrink: 0;
+    }
+
+    .vt-btn-lang {
+        padding: 3px 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 4px;
+        background: transparent;
+        color: #475569;
+        cursor: pointer;
+        transition: 0.15s ease;
+        white-space: nowrap;
+    }
+
+    .vt-btn-lang.active {
+        background: #2563eb;
+        color: #ffffff;
+    }
+
+    /* स्टेटस स्ट्रिप */
+    #vtStatus {
+        padding: 4px 8px;
+        background: #e0f2fe;
+        color: #0369a1;
+        border-radius: 5px;
+        margin-bottom: 6px;
+        font-weight: 600;
+        font-size: 0.82rem;
+        flex-shrink: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* एक्शन बटन रो */
+    .vt-btn-row {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 6px;
+        flex-shrink: 0;
+        width: 100%;
+    }
+
+    .vt-left-actions {
+        display: flex;
+        gap: 5px;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .vt-box button {
+        font-weight: 600;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.15s ease;
+        white-space: nowrap;
+    }
+
+    .vt-btn-act {
+        background: #e2e8f0;
+        color: #1e293b;
+        padding: 3px 4px;
+        font-size: 0.76rem;
+        flex: 1;
+        text-align: center;
+    }
+
+    .vt-btn-act:hover {
+        background: #cbd5e1;
+    }
+
+    #vtMicBtn {
+        background: #2563eb;
+        color: #fff;
+        padding: 4px 18px;
+        font-size: 0.84rem;
+        flex-shrink: 0;
+    }
+
+    #vtMicBtn.recording {
+        background: #dc2626;
+    }
+
+    /* एडिटर एरिया */
+    #vtTxtArea {
+        flex: 1;
+        width: 100%;
+        min-height: 60px;
+        padding: 8px;
+        font-size: 1.02rem;
+        line-height: 1.4;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 6px;
+        outline: none;
+        overflow-y: auto;
+        background: #ffffff;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    #vtTxtArea:focus {
+        border-color: #2563eb;
+    }
+
+    #vtTxtArea[placeholder]:empty:before {
+        content: attr(placeholder);
+        color: #94a3b8;
+        cursor: text;
+    }
+
+    #vtTxtArea b, #vtTxtArea strong {
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    /* फ़ूटर काउंट्स और गाइडलाइन */
+    .vt-footer-wrap {
+        margin-top: 4px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .vt-count {
+        color: #64748b;
+        font-size: 0.75rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* पंक्चुएशन गाइडलाइन बॉक्स */
+    .vt-guide {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 5px;
+        padding: 4px 6px;
+        font-size: 0.68rem;
+        color: #475569;
+        max-height: 48px;
+        overflow-y: auto;
+        line-height: 1.3;
+    }
+
+    .vt-guide b {
+        color: #1e293b;
+    }
+
+    @media (max-width: 480px) {
+        .vt-screen-overlay {
+            padding: 4px !important;
+        }
+        .vt-box {
+            padding: 8px;
+        }
+        .vt-box h2 {
+            font-size: 1rem;
+        }
+        .vt-btn-lang {
+            padding: 2px 6px;
+            font-size: 0.75rem;
+        }
+        #vtStatus {
+            font-size: 0.78rem;
+            padding: 3px 6px;
+        }
+        .vt-btn-act {
+            padding: 2px 3px;
+            font-size: 0.72rem;
+        }
+        #vtMicBtn {
+            padding: 3px 14px;
+            font-size: 0.78rem;
+        }
+        #vtTxtArea {
+            font-size: 0.92rem;
+            padding: 6px;
+        }
+        .vt-guide {
+            font-size: 0.62rem;
+            max-height: 42px;
+        }
+    }
+</style>
+
+<div class="vt-screen-overlay">
+    <div class="vt-box">
+        <div class="vt-header-top">
+            <h2>वॉइस टाइपिंग</h2>
+            <div class="vt-lang-switch">
+                <button type="button" class="vt-btn-lang active" id="vtBtnHi" onclick="vtSetLanguage('hi-IN')">हिंदी</button>
+                <button type="button" class="vt-btn-lang" id="vtBtnEn" onclick="vtSetLanguage('en-IN')">English</button>
+            </div>
+        </div>
+
+        <div id="vtStatus">माइक शुरू करने के लिए बटन दबाएं।</div>
+
+        <div class="vt-btn-row">
+            <div class="vt-left-actions">
+                <button type="button" class="vt-btn-act" onclick="vtCopyTxt()">कॉपी</button>
+                <button type="button" class="vt-btn-act" onclick="vtClearTxt()">साफ़</button>
+                <button type="button" class="vt-btn-act" onclick="vtDownloadTxt()">डाउनलोड</button>
+            </div>
+            <button type="button" id="vtMicBtn" onclick="vtToggleMic()">🎤 बोलना शुरू करें</button>
+        </div>
+
+        <div id="vtTxtArea" contenteditable="true" placeholder="बोलते ही यहाँ तुरंत टाइप होगा..."></div>
+
+        <div class="vt-footer-wrap">
+            <div class="vt-count">
+                <span>अक्षर: <b id="vtChars">0</b> | शब्द: <b id="vtWords">0</b></span>
+                <span>फ़ॉन्ट: Mukta</span>
+            </div>
+            <div id="vtGuideBox" class="vt-guide">
+                <b>हिंदी गाइड:</b> पूर्ण विराम / Full Stop (।) | अल्पविराम / Comma (,) | प्रश्न चिन्ह / Question Mark (?) | आश्चर्य सूचक / Exclamation (!) | उपविराम / Colon (:) | अर्धविराम / Semicolon (;) | योजक चिन्ह / Hyphen (-) | निर्देशक चिन्ह / Dash (—) | उद्धरण चिन्ह (" ") | कोष्ठक / Parenthesis (() | नई पंक्ति / New Line | "बोल्ड" बोलें | "नॉर्मल" बोलें
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+//<![CDATA[
+(function() {
+    var statusDiv = document.getElementById("vtStatus");
+    var micBtn = document.getElementById("vtMicBtn");
+    var txtArea = document.getElementById("vtTxtArea");
+    var btnHi = document.getElementById("vtBtnHi");
+    var btnEn = document.getElementById("vtBtnEn");
+    var guideBox = document.getElementById("vtGuideBox");
+
+    var currentLang = "hi-IN";
+    var isRecording = false;
+    var shouldAutoRestart = false;
+    var isBoldMode = false;
+    var isBulletMode = false;
+    var activeUserRange = null;
+
+    var audioCtx = null;
+    var mediaStreamSource = null;
+    var gainNode = null;
+
+    var pauseTimer = null;
+
+    var savedDraft = localStorage.getItem("vt_saved_html") || "";
+    txtArea.innerHTML = savedDraft;
+
+    var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    var TXT_NOT_SUPPORTED = "यह ब्राउज़र वॉइस टाइपिंग सपोर्ट नहीं करता। कृपया Chrome इस्तेमाल करें।";
+    var TXT_LANG_HI = "भाषा: हिंदी चुनी गई।";
+    var TXT_LANG_EN = "भाषा: English चुनी गई।";
+    var TXT_STOP_MIC = "⏹️ रोकें";
+    var TXT_START_MIC = "🎤 बोलें";
+    var TXT_MIC_OFF = "माइक बंद है।";
+    var TXT_MIC_DENIED = "माइक्रोफ़ोन की अनुमति दें।";
+    var TXT_COPIED = "कॉपी हो गया!";
+    var TXT_DL_EMPTY = "डाउनलोड के लिए पहले कुछ बोलें!";
+
+    var GUIDE_HI = "<b>हिंदी गाइड:</b> पूर्ण विराम / Full Stop (।) | अल्पविराम / Comma (,) | प्रश्न चिन्ह / Question Mark (?) | आश्चर्य सूचक / Exclamation (!) | उपविराम / Colon (:) | अर्धविराम / Semicolon (;) | योजक चिन्ह / Hyphen (-) | निर्देशक चिन्ह / Dash (—) | उद्धरण चिन्ह (\" \") | कोष्ठक / Parenthesis (() | नई पंक्ति / New Line | \"बोल्ड\" बोलें | \"नॉर्मल\" बोलें";
+    var GUIDE_EN = "<b>English Guide:</b> Period (.) | Comma (,) | Question Mark (?) | Exclamation (!) | Colon (:) | Semicolon (;) | Apostrophe (') | Open/Close Quote (\") | Open/Close Parenthesis (() | Open/Close Square ([]) | Open/Close Curly ({}) | Hyphen (-) | Dash (—) | Slash (/) | Backslash (\\) | Ampersand (&) | Asterisk (*) | Underscore (_) | New Line | Say \"Bold\" | Say \"Normal\"";
+
+    function getParaCmdRegex() {
+        return (currentLang === 'hi-IN') 
+            ? /(?:नया\s*अनुच्छेद|नया\s*पैराग्राफ|new\s*paragraph|new\s*para|naya\s*paragraph|naya\s*para)/gi
+            : /(?:new\s*paragraph|new\s*para)/gi;
+    }
+
+    if (!SpeechRecognition) {
+        statusDiv.style.background = "#fee2e2";
+        statusDiv.style.color = "#b91c1c";
+        statusDiv.innerHTML = TXT_NOT_SUPPORTED;
+        micBtn.disabled = true;
+    }
+
+    var rec = SpeechRecognition ? new SpeechRecognition() : null;
+
+    function syncSelection(range) {
+        var sel = window.getSelection();
+        if (sel) {
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    }
+
+    function recordUserSelection() {
+        var selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+            var range = selection.getRangeAt(0);
+            if (txtArea.contains(range.commonAncestorContainer)) {
+                activeUserRange = range.cloneRange();
+                return;
+            }
+        }
+        activeUserRange = null;
+    }
+
+    txtArea.addEventListener("mouseup", recordUserSelection);
+    txtArea.addEventListener("keyup", recordUserSelection);
+    txtArea.addEventListener("touchend", recordUserSelection);
+
+    document.addEventListener("mousedown", function(e) {
+        if (!txtArea.contains(e.target)) {
+            activeUserRange = null;
+        }
+    });
+
+    window.vtSetLanguage = function(lang) {
+        if (currentLang === lang) return;
+        currentLang = lang;
+
+        if (lang === 'hi-IN') {
+            btnHi.classList.add('active');
+            btnEn.classList.remove('active');
+            statusDiv.innerHTML = TXT_LANG_HI;
+            guideBox.innerHTML = GUIDE_HI;
+        } else {
+            btnEn.classList.add('active');
+            btnHi.classList.remove('active');
+            statusDiv.innerHTML = TXT_LANG_EN;
+            guideBox.innerHTML = GUIDE_EN;
+        }
+
+        if (rec) {
+            rec.lang = currentLang;
+            if (isRecording) {
+                shouldAutoRestart = true;
+                rec.stop();
+            }
+        }
+    };
+
+    function cleanPunctuation(str) {
+        var text = str;
+        var isHi = (currentLang === 'hi-IN');
+
+        if (isHi) {
+            // HINDI MODE: Support Both Hindi and English commands properly mapped
+            text = text.replace(/(पुलिस|कांस्टेबल|कॉन्स्टेबल|रेलवे|दरोगा|शिक्षक|नई|सीधी|असिस्टेंट|क्लर्क|ग्रुप|विभाग|सरकारी)\s+भारती/gi, "$1 भर्ती");
+            text = text.replace(/भारती\s+(प्रक्रिया|बोर्ड|विज्ञापन|सूचना|नोटिफिकेशन|नियम|आवेदन|फॉर्म|परीक्षा|अपडेट)/gi, "भर्ती $1");
+
+            text = text.replace(/(?:\s*)(?:पूर्ण\s*विराम|फुलस्टॉप|फुल\s*स्टॉप|full\s*stop|period|dot)(?:\s*चिन्ह|mark)?(?=\s|$|\b)/gi, "।");
+            text = text.replace(/(?:\s*)(?:अल्प\s*विराम|अल्पविराम|कोमा|कॉमा|comma|coma)(?:\s*चिन्ह|mark)?(?=\s|$|\b)/gi, ",");
+            text = text.replace(/(?:\s*)(?:प्रश्न\s*वाचक|प्रश्न\s*चिन्ह|प्रश्नवाचक\s*चिन्ह|क्वेश्कन\s*मार्क|question\s*mark)(?:\s*चिन्ह)?(?=\s|$|\b)/gi, "?");
+            text = text.replace(/(?:\s*)(?:विस्मय\s*(बोधक|सूचक)|आश्चर्य\s*सूचक|विस्मयादिबोधक|एक्सक्लेमेशन\s*(?:मार्क|पॉइंट)|exclamation\s*(?:mark|point))(?:\s*चिन्ह)?(?=\s|$|\b)/gi, "!");
+            text = text.replace(/(?:\s*)(?:उपविराम|कोलन|colon)(?=\s|$|\b)/gi, ":");
+            text = text.replace(/(?:\s*)(?:अर्धविराम|सेमीकोलन|semicolon)(?=\s|$|\b)/gi, ";");
+            text = text.replace(/(?:\s*)(?:योजक\s*चिन्ह|हाइफन|hyphen)(?=\s|$|\b)/gi, "-");
+            text = text.replace(/(?:\s*)(?:निर्देशक\s*चिन्ह|डैश|dash)(?=\s|$|\b)/gi, "—");
+            text = text.replace(/(?:\s*)(?:उद्धरण\s*चिन्ह|ओपन\s*कोट|ओपनिंग\s*कोट|open\s*quote|opening\s*quote)(?=\s|$|\b)/gi, "\"");
+            text = text.replace(/(?:\s*)(?:क्लोज\s*कोट|क्लोजिंग\s*कोट|close\s*quote|closing\s*quote)(?=\s|$|\b)/gi, "\"");
+            text = text.replace(/(?:\s*)(?:ओपन\s*सिंगल\s*कोट|open\s*single\s*quote)(?=\s|$|\b)/gi, "'");
+            text = text.replace(/(?:\s*)(?:क्लोज\s*सिंगल\s*कोट|close\s*single\s*quote)(?=\s|$|\b)/gi, "'");
+            text = text.replace(/(?:\s*)(?:कोष्ठक\s*शुरू|ओपन\s*(?:पैराथेसिस|ब्रैकेट|कोष्टक)|open\s*(?:parenthesis|bracket))(?=\s|$|\b)/gi, "(");
+            text = text.replace(/(?:\s*)(?:कोष्ठक\s*बंद|बंद\s*(?:ब्रैकेट|कोष्टक)|क्लोज\s*(?:पैराथेसिस|ब्रैकेट|कोष्टक)|close\s*(?:parenthesis|bracket))(?=\s|$|\b)/gi, ")");
+            text = text.replace(/(?:\s*)(?:ओपन\s*स्क्वायर\s*ब्रैकेट|open\s*square\s*bracket)(?=\s|$|\b)/gi, "[");
+            text = text.replace(/(?:\s*)(?:क्लोज\s*स्क्वायर\s*ब्रैकेट|close\s*square\s*bracket)(?=\s|$|\b)/gi, "]");
+            text = text.replace(/(?:\s*)(?:ओपन\s*कर्ली\s*ब्रैकेट|open\s*curly\s*bracket)(?=\s|$|\b)/gi, "{");
+            text = text.replace(/(?:\s*)(?:क्लोज\s*कर्ली\s*ब्रैकेट|close\s*curly\s*bracket)(?=\s|$|\b)/gi, "}");
+            text = text.replace(/(?:\s*)(?:स्लैश|तिरछी\s*रेखा|फॉरवर्ड\s*स्लैश|slash)(?=\s|$|\b)/gi, "/");
+            text = text.replace(/(?:\s*)(?:बैकस्लैश|backslash)(?=\s|$|\b)/gi, "\\");
+            text = text.replace(/(?:\s*)(?:एम्परसैंड|ampersand)(?=\s|$|\b)/gi, "&");
+            text = text.replace(/(?:\s*)(?:संकेत\s*चिन्ह|एस्टरिसक|स्टार|asterisk|star)(?=\s|$|\b)/gi, "*");
+            text = text.replace(/(?:\s*)(?:अंडरस्कोर|underscore)(?=\s|$|\b)/gi, "_");
+            text = text.replace(/(?:\s*)(?:नई\s*लाइन|नई\s*पंक्ति|न्यू\s*लाइन|नेक्स्ट\s*लाइन|new\s*line|next\s*line)(?=\s|$|\b)/gi, "\n");
+        } else {
+            // ENGLISH MODE: Support ONLY English commands
+            text = text.replace(/(?:\s*)(?:period|full\s*stop|point|dot|\b(?:fu(?:l|ll)[\s\-_]*stop|fullstop|period|dot)\b)(?:\s*mark)?(?=\s|$|\b)/gi, ".");
+            text = text.replace(/(?:\s*)(?:comma|coma)(?:\s*mark)?(?=\s|$|\b)/gi, ",");
+            text = text.replace(/(?:\s*)(?:question\s*mark)(?=\s|$|\b)/gi, "?");
+            text = text.replace(/(?:\s*)(?:exclamation\s*(?:mark|point))(?=\s|$|\b)/gi, "!");
+            text = text.replace(/(?:\s*)(?:colon)(?=\s|$|\b)/gi, ":");
+            text = text.replace(/(?:\s*)(?:semicolon)(?=\s|$|\b)/gi, ";");
+            text = text.replace(/(?:\s*)(?:apostrophe)(?=\s|$|\b)/gi, "'");
+            text = text.replace(/(?:\s*)(?:open\s*quote|opening\s*quote)(?=\s|$|\b)/gi, "\"");
+            text = text.replace(/(?:\s*)(?:close\s*quote|closing\s*quote)(?=\s|$|\b)/gi, "\"");
+            text = text.replace(/(?:\s*)(?:open\s*single\s*quote)(?=\s|$|\b)/gi, "'");
+            text = text.replace(/(?:\s*)(?:close\s*single\s*quote)(?=\s|$|\b)/gi, "'");
+            text = text.replace(/(?:\s*)(?:open\s*(?:parenthesis|bracket))(?=\s|$|\b)/gi, "(");
+            text = text.replace(/(?:\s*)(?:close\s*(?:parenthesis|bracket))(?=\s|$|\b)/gi, ")");
+            text = text.replace(/(?:\s*)(?:open\s*square\s*bracket)(?=\s|$|\b)/gi, "[");
+            text = text.replace(/(?:\s*)(?:close\s*square\s*bracket)(?=\s|$|\b)/gi, "]");
+            text = text.replace(/(?:\s*)(?:open\s*curly\s*bracket)(?=\s|$|\b)/gi, "{");
+            text = text.replace(/(?:\s*)(?:close\s*curly\s*bracket)(?=\s|$|\b)/gi, "}");
+            text = text.replace(/(?:\s*)(?:hyphen)(?=\s|$|\b)/gi, "-");
+            text = text.replace(/(?:\s*)(?:dash)(?=\s|$|\b)/gi, "—");
+            text = text.replace(/(?:\s*)(?:forward\s*slash|slash)(?=\s|$|\b)/gi, "/");
+            text = text.replace(/(?:\s*)(?:backslash)(?=\s|$|\b)/gi, "\\");
+            text = text.replace(/(?:\s*)(?:ampersand)(?=\s|$|\b)/gi, "&");
+            text = text.replace(/(?:\s*)(?:asterisk|star)(?=\s|$|\b)/gi, "*");
+            text = text.replace(/(?:\s*)(?:underscore)(?=\s|$|\b)/gi, "_");
+            text = text.replace(/(?:\s*)(?:new\s*line|next\s*line)(?=\s|$|\b)/gi, "\n");
+        }
+
+        text = text.replace(/\n[ \t]+/g, "\n");
+        text = text.replace(/\s+([।.,?\!:)\]}%\/\\&*_\-])/g, "$1");
+        text = text.replace(/([।.,?\!:)\]}%\/\\&*_\-])(?=[^\s\n।.,?\!:)\]}%\/\\&*_\-])/g, "$1 ");
+        text = text.replace(/(\(|\{|\[)\s+/g, "$1");
+        text = text.replace(/\s+(\)|\}|\])/g, "$1");
+        text = text.replace(/(^|[^\s\n])(\(|\{|\[)/g, "$1 $2");
+        return text;
+    }
+
+    function autoScroll() {
+        var el = null;
+        if (interimSpan && txtArea.contains(interimSpan)) {
+            el = interimSpan;
+        } else if (activeUserRange && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+            var rect = activeUserRange.getBoundingClientRect();
+            var contRect = txtArea.getBoundingClientRect();
+            if (rect.width > 0 || rect.height > 0) {
+                if (rect.bottom > contRect.bottom) {
+                    txtArea.scrollTop += (rect.bottom - contRect.bottom + 20);
+                } else if (rect.top < contRect.top) {
+                    txtArea.scrollTop -= (contRect.top - rect.top + 20);
+                }
+                return;
+            } else {
+                el = activeUserRange.endContainer;
+                if (el && el.nodeType === Node.TEXT_NODE) {
+                    el = el.parentNode;
+                }
+            }
+        }
+
+        if (el && el.getBoundingClientRect && txtArea.contains(el)) {
+            var eRect = el.getBoundingClientRect();
+            var cRect = txtArea.getBoundingClientRect();
+            if (eRect.bottom > cRect.bottom) {
+                txtArea.scrollTop += (eRect.bottom - cRect.bottom + 20);
+            } else if (eRect.top < cRect.top) {
+                txtArea.scrollTop -= (cRect.top - eRect.top + 20);
+            }
+        } else {
+            txtArea.scrollTop = txtArea.scrollHeight;
+        }
+    }
+
+    function trimTrailingSpaceFromDOM() {
+        var node = txtArea.lastChild;
+        while (node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                if (node.nodeValue.endsWith(" ")) {
+                    node.nodeValue = node.nodeValue.replace(/\s+$/, "");
+                    break;
+                }
+                if (node.nodeValue.length > 0) break;
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                var inner = node.lastChild;
+                while (inner && inner.nodeType === Node.TEXT_NODE) {
+                    if (inner.nodeValue.endsWith(" ")) {
+                        inner.nodeValue = inner.nodeValue.replace(/\s+$/, "");
+                        break;
+                    }
+                    if (inner.nodeValue.length > 0) break;
+                }
+                break;
+            }
+            node = node.previousSibling;
+        }
+    }
+
+    function commitInstantParagraph() {
+        if (activeUserRange && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+            var prefixRange = document.createRange();
+            prefixRange.selectNodeContents(txtArea);
+            prefixRange.setEnd(activeUserRange.startContainer, activeUserRange.startOffset);
+            var textBefore = prefixRange.toString();
+            var pToAdd = "\n\n";
+            if (textBefore.endsWith("\n\n")) {
+                pToAdd = "";
+            } else if (textBefore.endsWith("\n")) {
+                pToAdd = "\n";
+            } else if (textBefore.length === 0) {
+                pToAdd = "";
+            }
+            if (pToAdd.length > 0) {
+                var pNode = document.createTextNode(pToAdd);
+                activeUserRange.insertNode(pNode);
+                activeUserRange.setStartAfter(pNode);
+                activeUserRange.collapse(true);
+                syncSelection(activeUserRange);
+            }
+        } else {
+            trimTrailingSpaceFromDOM();
+            var curText = txtArea.innerText;
+            if (!curText.endsWith("\n\n")) {
+                if (curText.endsWith("\n")) {
+                    txtArea.appendChild(document.createTextNode("\n"));
+                } else if (curText.length > 0) {
+                    txtArea.appendChild(document.createTextNode("\n\n"));
+                }
+            }
+        }
+        localStorage.setItem("vt_saved_html", txtArea.innerHTML);
+        autoScroll();
+        updateCounts();
+    }
+
+    function processVoiceCommands(rawText) {
+        var text = cleanPunctuation(rawText);
+        var isHi = (currentLang === 'hi-IN');
+        
+        var normalRegex = isHi 
+            ? /(?:^|\s*)(?:नॉर्मल|\bnormal\b|अनबोल्ड|\bunbold\b|(?:बोल्ड|बुलेट)\s*(बंद|क्लोज़?|एंड)|\b(?:bold|bullet)\s*(?:close|end|stop)\b)\s*(.*)$/i
+            : /(?:^|\s*)(?:\bnormal\b|\bunbold\b|\b(?:bold|bullet)\s*(?:close|end|stop)\b)\s*(.*)$/i;
+
+        if (normalRegex.test(text)) {
+            var matchNorm = text.match(normalRegex);
+            isBoldMode = false;
+            isBulletMode = false;
+            return { bold: false, bullet: false, content: cleanPunctuation(matchNorm[1] || "") };
+        }
+
+        var bulletRegex = isHi
+            ? /(?:^|\s*)(?:बुलेट(?:\s*पॉइंट्स?|\s)?|\bbullet(?:\s*points?)?\b)\s*(.*)$/i
+            : /(?:^|\s*)(?:\bbullet(?:\s*points?)?\b)\s*(.*)$/i;
+
+        if (bulletRegex.test(text)) {
+            var matchBullet = text.match(bulletRegex);
+            isBulletMode = true;
+            return { bold: isBoldMode, bullet: true, content: cleanPunctuation(matchBullet[1] || "") };
+        }
+
+        var boldRegex = isHi
+            ? /(?:^|\s*)(?:बोल्ड|\bbold\b)\s*(.*)$/i
+            : /(?:^|\s*)(?:\bbold\b)\s*(.*)$/i;
+
+        if (boldRegex.test(text)) {
+            var matchBold = text.match(boldRegex);
+            isBoldMode = true;
+            return { bold: true, bullet: isBulletMode, content: cleanPunctuation(matchBold[1] || "") };
+        }
+        return { bold: isBoldMode, bullet: isBulletMode, content: text };
+    }
+
+    function appendText(chunk, bold, bullet) {
+        if (!chunk) return;
+        var clean = chunk.replace(/^[ \t]+/, "");
+        if (!clean) return;
+
+        if (activeUserRange && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+            var prefixRange = document.createRange();
+            prefixRange.selectNodeContents(txtArea);
+            prefixRange.setEnd(activeUserRange.startContainer, activeUserRange.startOffset);
+            var beforeText = prefixRange.toString();
+
+            var suffixRange = document.createRange();
+            suffixRange.selectNodeContents(txtArea);
+            suffixRange.setStart(activeUserRange.endContainer, activeUserRange.endOffset);
+            var afterText = suffixRange.toString();
+
+            if (beforeText.endsWith("\n\n")) {
+                clean = clean.replace(/^\n+/, "");
+            } else if (beforeText.endsWith("\n")) {
+                clean = clean.replace(/^\n\n+/, "\n");
+            }
+
+            var startsWithPunct = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(clean);
+
+            if (startsWithPunct && /[\s\u00A0]+$/.test(beforeText)) {
+                var spaceMatch = beforeText.match(/[\s\u00A0]+$/);
+                var spaceCount = spaceMatch ? spaceMatch[0].length : 0;
+                var node = activeUserRange.startContainer;
+                var offset = activeUserRange.startOffset;
+                
+                var deletedNatively = false;
+                if (node.nodeType === Node.TEXT_NODE && offset >= spaceCount) {
+                    var textBeforeCursor = node.nodeValue.substring(0, offset);
+                    if (/[\s\u00A0]+$/.test(textBeforeCursor)) {
+                        var localSpaces = textBeforeCursor.match(/[\s\u00A0]+$/)[0].length;
+                        if (localSpaces === spaceCount) {
+                            node.deleteData(offset - spaceCount, spaceCount);
+                            activeUserRange.setStart(node, offset - spaceCount);
+                            activeUserRange.collapse(true);
+                            deletedNatively = true;
+                        }
+                    }
+                }
+                
+                if (!deletedNatively) {
+                    syncSelection(activeUserRange);
+                    for(var s = 0; s < spaceCount; s++) {
+                        document.execCommand("delete", false, null);
+                    }
+                    recordUserSelection();
+                }
+                
+                if (activeUserRange) {
+                    prefixRange.selectNodeContents(txtArea);
+                    prefixRange.setEnd(activeUserRange.startContainer, activeUserRange.startOffset);
+                    beforeText = prefixRange.toString();
+                }
+            }
+
+            var textToInsert = clean;
+
+            if (bullet) {
+                if (!beforeText.endsWith("\n") && beforeText.length > 0) {
+                    textToInsert = "\n" + textToInsert;
+                }
+                if (!beforeText.endsWith("• ")) {
+                    textToInsert = "• " + textToInsert;
+                }
+            } else {
+                var isNewlineStart = /^[\n]/.test(clean);
+                var needsLeadingSpace = beforeText.length > 0 && 
+                                     !beforeText.endsWith("\n") && 
+                                     !beforeText.endsWith(" ") && 
+                                     !beforeText.endsWith("(") && 
+                                     !beforeText.endsWith("{") && 
+                                     !beforeText.endsWith("[") && 
+                                     !beforeText.endsWith("\"") && 
+                                     !beforeText.endsWith("'") && 
+                                     !startsWithPunct && 
+                                     !isNewlineStart;
+                if (needsLeadingSpace) {
+                    textToInsert = " " + textToInsert;
+                }
+            }
+
+            if (afterText.length > 0) {
+                var nextChar = afterText.charAt(0);
+                if (!/[ \n\t।.,?\!:)\]}%\/\\&*_\-]/.test(nextChar) && !textToInsert.endsWith(" ")) {
+                    textToInsert = textToInsert + " ";
+                }
+            }
+
+            var insertNode = bold ? document.createElement("b") : document.createTextNode(textToInsert);
+            if (bold) insertNode.innerText = textToInsert;
+
+            activeUserRange.deleteContents();
+            activeUserRange.insertNode(insertNode);
+            activeUserRange.setStartAfter(insertNode);
+            activeUserRange.collapse(true);
+            
+            syncSelection(activeUserRange);
+            
+        } else {
+            var curText = txtArea.innerText;
+            if (curText.endsWith("\n\n")) {
+                clean = clean.replace(/^\n+/, "");
+            } else if (curText.endsWith("\n")) {
+                clean = clean.replace(/^\n\n+/, "\n");
+            }
+
+            var startsWithPunctEnd = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(clean);
+            if (startsWithPunctEnd) {
+                trimTrailingSpaceFromDOM();
+                curText = txtArea.innerText;
+            }
+
+            if (bullet) {
+                if (!curText.endsWith("\n") && curText.length > 0) {
+                    txtArea.appendChild(document.createTextNode("\n"));
+                }
+                if (!txtArea.innerText.endsWith("• ")) {
+                    txtArea.appendChild(document.createTextNode("• "));
+                }
+            } else {
+                var isNewlineStartEnd = /^[\n]/.test(clean);
+                var needsSpaceEnd = curText.length > 0 && 
+                                  !curText.endsWith("\n") && 
+                                  !curText.endsWith(" ") && 
+                                  !curText.endsWith("(") && 
+                                  !curText.endsWith("{") && 
+                                  !curText.endsWith("[") && 
+                                  !curText.endsWith("\"") && 
+                                  !curText.endsWith("'") && 
+                                  !startsWithPunctEnd && 
+                                  !isNewlineStartEnd;
+                if (needsSpaceEnd) {
+                    txtArea.appendChild(document.createTextNode(" "));
+                }
+            }
+
+            if (bold) {
+                var boldElem = document.createElement("b");
+                boldElem.innerText = clean;
+                txtArea.appendChild(boldElem);
+            } else {
+                txtArea.appendChild(document.createTextNode(clean));
+            }
+        }
+
+        localStorage.setItem("vt_saved_html", txtArea.innerHTML);
+        autoScroll();
+        updateCounts();
+    }
+
+    function removeInterimSafely() {
+        if (interimSpan && interimSpan.parentNode) {
+            var parent = interimSpan.parentNode;
+            var prevRng = document.createRange();
+            prevRng.setStartBefore(interimSpan);
+            prevRng.collapse(true);
+            parent.removeChild(interimSpan);
+            interimSpan = null;
+            if (activeUserRange && parent.contains(activeUserRange.commonAncestorContainer)) {
+                activeUserRange = prevRng;
+            }
+        }
+    }
+
+    function startAutoPuncTimer() {
+        if (pauseTimer) clearTimeout(pauseTimer);
+        
+        pauseTimer = setTimeout(function() {
+            var puncMark = (currentLang === 'hi-IN') ? "।" : ".";
+            
+            if (activeUserRange && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+                var prefixRange = document.createRange();
+                prefixRange.selectNodeContents(txtArea);
+                prefixRange.setEnd(activeUserRange.startContainer, activeUserRange.startOffset);
+                var beforeTextLive = prefixRange.toString().replace(/[\s\uFEFF\xA0]+$/g, '');
+                
+                if (beforeTextLive.length > 0) {
+                    var lastChar = beforeTextLive.slice(-1);
+                    if (!/[।.,?!:\-—\n]/.test(lastChar)) {
+                        appendText(puncMark, false, false);
+                    }
+                }
+            } else {
+                var curText = txtArea.innerText.replace(/[\s\uFEFF\xA0]+$/g, '');
+                if (curText.length > 0) {
+                    var lastCharEnd = curText.slice(-1);
+                    if (!/[।.,?!:\-—\n]/.test(lastCharEnd)) {
+                        appendText(puncMark, false, false);
+                    }
+                }
+            }
+        }, 3000);
+    }
+
+    if (rec) {
+        rec.continuous = true;
+        rec.interimResults = true;
+        rec.maxAlternatives = 1;
+        rec.lang = currentLang;
+
+        rec.onstart = function() {
+            isRecording = true;
+            micBtn.innerHTML = TXT_STOP_MIC;
+            micBtn.className = "recording";
+            statusDiv.style.background = "#dcfce7";
+            statusDiv.style.color = "#15803d";
+            var langLabel = currentLang === 'hi-IN' ? "हिंदी" : 'English';
+            statusDiv.innerHTML = "माइक चालू है [" + langLabel + "] (बूस्टेड)...";
+        };
+
+        var interimSpan = null;
+
+        rec.onresult = function(e) {
+            if (pauseTimer) clearTimeout(pauseTimer);
+            removeInterimSafely();
+
+            if (activeUserRange && !activeUserRange.collapsed && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+                activeUserRange.deleteContents();
+            }
+
+            var live = "";
+            for (var i = e.resultIndex; i < e.results.length; i++) {
+                var piece = e.results[i][0].transcript;
+                if (e.results[i].isFinal) {
+                    var paraRegex = getParaCmdRegex();
+                    if (paraRegex.test(piece)) {
+                        commitInstantParagraph();
+                        piece = piece.replace(paraRegex, "");
+                    }
+                    var parsed = processVoiceCommands(piece.trimStart());
+                    appendText(parsed.content, parsed.bold, parsed.bullet);
+                } else {
+                    live += piece;
+                }
+            }
+
+            if (live.trim().length > 0) {
+                var paraRegexLive = getParaCmdRegex();
+                if (paraRegexLive.test(live)) {
+                    commitInstantParagraph();
+                    live = live.replace(paraRegexLive, "");
+                }
+
+                var processedLive = processVoiceCommands(live);
+                processedLive.content = processedLive.content.replace(/^[ \t]+/, "");
+
+                if (processedLive.content.length > 0) {
+                    if (activeUserRange && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+                        var prefixRange = document.createRange();
+                        prefixRange.selectNodeContents(txtArea);
+                        prefixRange.setEnd(activeUserRange.startContainer, activeUserRange.startOffset);
+                        var beforeTextLive = prefixRange.toString();
+
+                        var suffixRange = document.createRange();
+                        suffixRange.selectNodeContents(txtArea);
+                        suffixRange.setStart(activeUserRange.endContainer, activeUserRange.endOffset);
+                        var afterTextLive = suffixRange.toString();
+
+                        var startsWithPunctLive = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(processedLive.content);
+                        var isNewlineStartLive = /^[\n]/.test(processedLive.content);
+                        
+                        var needsSpaceLive = beforeTextLive.length > 0 && 
+                                           !beforeTextLive.endsWith("\n") && 
+                                           !beforeTextLive.endsWith(" ") && 
+                                           !beforeTextLive.endsWith("(") && 
+                                           !beforeTextLive.endsWith("{") && 
+                                           !beforeTextLive.endsWith("[") && 
+                                           !beforeTextLive.endsWith("\"") && 
+                                           !beforeTextLive.endsWith("'") && 
+                                           !startsWithPunctLive && 
+                                           !isNewlineStartLive;
+
+                        var liveContentToInsert = processedLive.content;
+
+                        if (afterTextLive.length > 0) {
+                            var nextCharLive = afterTextLive.charAt(0);
+                            if (!/[ \n\t।.,?\!:)\]}%\/\\&*_\-]/.test(nextCharLive) && !liveContentToInsert.endsWith(" ")) {
+                                liveContentToInsert = liveContentToInsert + " ";
+                            }
+                        }
+
+                        interimSpan = document.createElement(processedLive.bold ? "b" : "span");
+                        interimSpan.style.color = "#64748b";
+                        interimSpan.innerText = (needsSpaceLive ? " " : "") + (processedLive.bullet && !beforeTextLive.endsWith("• ") ? "• " : "") + liveContentToInsert;
+                        
+                        activeUserRange.insertNode(interimSpan);
+                        
+                        var tempRng = document.createRange();
+                        tempRng.setStartAfter(interimSpan);
+                        tempRng.collapse(true);
+                        syncSelection(tempRng);
+
+                    } else {
+                        var curTextLive = txtArea.innerText;
+                        var startsWithPunctLiveEnd = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(processedLive.content);
+                        var isNewlineStartLiveEnd = /^[\n]/.test(processedLive.content);
+                        
+                        var needsSpaceLiveEnd = curTextLive.length > 0 && 
+                                                !curTextLive.endsWith("\n") && 
+                                                !curTextLive.endsWith(" ") && 
+                                                !curTextLive.endsWith("(") && 
+                                                !curTextLive.endsWith("{") && 
+                                                !curTextLive.endsWith("[") && 
+                                                !curTextLive.endsWith("\"") && 
+                                                !curTextLive.endsWith("'") && 
+                                                !startsWithPunctLiveEnd && 
+                                                !isNewlineStartLiveEnd;
+
+                        interimSpan = document.createElement(processedLive.bold ? "b" : "span");
+                        interimSpan.style.color = "#64748b";
+                        interimSpan.innerText = (needsSpaceLiveEnd ? " " : "") + (processedLive.bullet && !curTextLive.endsWith("• ") ? "• " : "") + processedLive.content;
+                        
+                        txtArea.appendChild(interimSpan);
+                    }
+                    autoScroll();
+                }
+            }
+
+            startAutoPuncTimer();
+        };
+
+        rec.onerror = function(e) {
+            if (e.error === "not-allowed") {
+                alert("माइक ब्लॉक है! कृपया लॉक (Lock) आइकन पर क्लिक करके Microphone Allow करें।");
+                statusDiv.innerHTML = TXT_MIC_DENIED;
+            } else if (e.error !== "no-speech") {
+                statusDiv.innerHTML = "त्रुटि: " + e.error;
+            }
+        };
+
+        rec.onend = function() {
+            removeInterimSafely();
+
+            if (shouldAutoRestart) {
+                shouldAutoRestart = false;
+                try {
+                    rec.start();
+                    return;
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+
+            isRecording = false;
+            micBtn.innerHTML = TXT_START_MIC;
+            micBtn.className = "";
+            statusDiv.style.background = "#e0f2fe";
+            statusDiv.style.color = "#0369a1";
+            statusDiv.innerHTML = TXT_MIC_OFF;
+            localStorage.setItem("vt_saved_html", txtArea.innerHTML);
+            updateCounts();
+        };
+    }
+
+    async function startAudioBoost() {
+        try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+            var stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            mediaStreamSource = audioCtx.createMediaStreamSource(stream);
+            gainNode = audioCtx.createGain();
+            gainNode.gain.value = 2.5; 
+            mediaStreamSource.connect(gainNode);
+        } catch(err) {
+            console.log("Audio boost error: ", err);
+        }
+    }
+
+    window.vtToggleMic = function() {
+        if (!rec) return;
+        if (!isRecording) {
+            shouldAutoRestart = false;
+            rec.lang = currentLang;
+            startAudioBoost();
+            try {
+                rec.start();
+            } catch (err) {
+                rec.stop();
+            }
+        } else {
+            shouldAutoRestart = false;
+            if (pauseTimer) clearTimeout(pauseTimer); 
+            rec.stop();
+            if (audioCtx && audioCtx.state !== 'closed') {
+                audioCtx.close();
+            }
+        }
+    };
+
+    function updateCounts() {
+        var val = (txtArea.innerText || "").trim();
+        document.getElementById("vtChars").innerText = val.length;
+        document.getElementById("vtWords").innerText = val ? val.split(/\s+/).length : 0;
+    }
+
+    txtArea.addEventListener("input", function() {
+        localStorage.setItem("vt_saved_html", txtArea.innerHTML);
+        updateCounts();
+    });
+
+    window.vtCopyTxt = function() {
+        var rawText = (txtArea.innerText || "").trim();
+        if (!rawText) return;
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(rawText).then(function() {
+                alert(TXT_COPIED);
+            }).catch(function() {
+                fallbackCopy(rawText);
+            });
+        } else {
+            fallbackCopy(rawText);
+        }
+    };
+
+    function fallbackCopy(text) {
+        var tempInput = document.createElement("textarea");
+        tempInput.value = text;
+        tempInput.style.position = "fixed";
+        tempInput.style.opacity = "0";
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        try {
+            document.execCommand('copy');
+            alert(TXT_COPIED);
+        } catch (err) {}
+        document.body.removeChild(tempInput);
+    }
+
+    window.vtClearTxt = function() {
+        var rawText = (txtArea.innerText || "").trim();
+        if (!rawText) return;
+        if (confirm("क्या आप वाकई सारा टेक्स्ट साफ़ करना चाहते हैं?")) {
+            if (pauseTimer) clearTimeout(pauseTimer);
+            txtArea.innerHTML = "";
+            activeUserRange = null;
+            isBoldMode = false;
+            isBulletMode = false;
+            localStorage.removeItem("vt_saved_html");
+            updateCounts();
+        }
+    };
+
+    window.vtDownloadTxt = function() {
+        var text = (txtArea.innerText || "").trim();
+        if (!text) {
+            alert(TXT_DL_EMPTY);
+            return;
+        }
+
+        var now = new Date();
+        var day = String(now.getDate()).padStart(2, '0');
+        var month = String(now.getMonth() + 1).padStart(2, '0');
+        var year = now.getFullYear();
+        var currentDate = day + "-" + month + "-" + year;
+
+        var lastDate = localStorage.getItem('vt_lastDate');
+        var fileCount = parseInt(localStorage.getItem('vt_fileCount') || '0', 10);
+
+        if (lastDate === currentDate) {
+            fileCount += 1;
+        } else {
+            fileCount = 1;
+            lastDate = currentDate;
+        }
+
+        localStorage.setItem('vt_lastDate', currentDate);
+        localStorage.setItem('vt_fileCount', fileCount);
+
+        var fileName = "Voice-Article-" + currentDate + "-Part-" + fileCount + ".txt";
+        var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName;
+        a.click();
+    };
+
+    updateCounts();
+})();
+//]]>
+</script>
