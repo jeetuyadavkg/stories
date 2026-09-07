@@ -1,0 +1,459 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&display=swap');
+
+/* ब्राउज़र और ब्लॉगर का डिफ़ॉल्ट स्क्रोलबार पूरी तरह हटाएँ */
+html, body {
+    overflow: hidden !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+}
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* ब्लॉगर थीम के बाकी एलिमेंट्स बंद */
+header, footer, nav, aside, #header, #footer, #sidebar, #sidebar-wrapper, 
+.header-widget, .blog-pager, .post-title, .entry-title, .post-header, 
+.comments, #comments, .sidebar-container, .breadcrumbs {
+    display: none !important;
+}
+
+/* 100% फुल स्क्रीन कंटेनर - नो स्क्रोल */
+.stf-screen-wrapper {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: #f4f6f9 !important;
+    z-index: 999999 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    font-family: 'Mukta', sans-serif !important;
+    color: #222 !important;
+}
+
+.stf-screen-wrapper * {
+    box-sizing: border-box;
+    font-family: 'Mukta', sans-serif;
+}
+
+/* मुख्य ऐप बॉक्स */
+.stf-app-box {
+    background: #ffffff;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px;
+    overflow: hidden;
+    justify-content: space-between;
+}
+
+/* हेडर व लाइव स्टैट्स */
+.stf-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #003366;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+    gap: 6px;
+}
+
+.stf-top-header h1 {
+    font-size: 16px;
+    color: #003366;
+    margin: 0;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stf-stats {
+    display: flex;
+    gap: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #003366;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.stf-stats span {
+    background: #eef3f8;
+    padding: 1px 5px;
+    border-radius: 4px;
+    border: 1px solid #d0dbe5;
+    white-space: nowrap;
+}
+
+/* एडिटर एरिया हेडर */
+.stf-editor-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+}
+
+.stf-editor-top-bar label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.stf-top-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* मध्य भाग: टेक्स्टएरिया */
+.stf-editor-area {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 60px;
+    margin-bottom: 6px;
+}
+
+.stf-editor-area textarea {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    min-height: 60px;
+    resize: none;
+    padding: 8px 10px;
+    border: 1px solid #ccd6e0;
+    border-radius: 6px;
+    font-size: 13.5px;
+    line-height: 1.4;
+    outline: none;
+}
+
+.stf-editor-area textarea:focus {
+    border-color: #003366;
+}
+
+/* शॉर्ट फॉर्म्स इनपुट */
+.stf-acronym-row {
+    background: #fafbfc;
+    border: 1px dashed #003366;
+    padding: 4px 8px;
+    border-radius: 5px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.stf-acronym-row label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #003366;
+    white-space: nowrap;
+    margin: 0;
+}
+
+.stf-acronym-row input {
+    flex: 1;
+    border: 1px solid #ccd6e0;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    outline: none;
+    min-width: 40px;
+}
+
+/* बॉटम मेन्यू बार */
+.stf-bottom-controls {
+    display: flex;
+    background: #fdfdfd;
+    border: 1px solid #e2e8f0;
+    padding: 6px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.stf-btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 100%;
+}
+
+/* बटन स्टाइल्स */
+.stf-app-box button {
+    padding: 4px 8px;
+    border: 1px solid #003366;
+    background-color: #fff;
+    color: #003366;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    flex: 1 1 auto;
+    text-align: center;
+}
+
+.stf-app-box button:hover { background-color: #003366; color: #fff; }
+.stf-app-box .btn-highlight { background-color: #003366; color: #fff; }
+.stf-app-box .btn-highlight:hover { background-color: #002244; }
+.stf-app-box .btn-reverse { border-color: #e67e22; color: #d35400; background-color: #fff8f2; }
+.stf-app-box .btn-reverse:hover { background-color: #e67e22; color: #fff; }
+.stf-app-box .btn-trans { border-color: #1a73e8; color: #1a73e8; background-color: #e8f0fe; }
+.stf-app-box .btn-trans:hover { background-color: #1a73e8; color: #fff; }
+.stf-app-box .btn-hinglish { border-color: #8e44ad; color: #8e44ad; background-color: #fbf5fc; }
+.stf-app-box .btn-hinglish:hover { background-color: #8e44ad; color: #fff; }
+
+.stf-app-box .btn-copy { background-color: #25D366; border-color: #25D366; color: #fff; padding: 2px 8px; flex: none; font-size: 11.5px; }
+.stf-app-box .btn-copy:hover { background-color: #1ebc59; border-color: #1ebc59; }
+.stf-app-box .btn-danger { background-color: #ea4335; border-color: #ea4335; color: #fff; padding: 2px 7px; flex: none; font-size: 11.5px; }
+.stf-app-box .btn-danger:hover { background-color: #c5221f; border-color: #c5221f; }
+
+.stf-toast {
+    display: none;
+    color: #0f9d58;
+    font-weight: 700;
+    font-size: 11px;
+    margin-right: 2px;
+}
+</style>
+
+<div class="stf-screen-wrapper">
+    <div class="stf-app-box">
+        <!--टॉप हेडर व स्टैट्स-->
+        <div class="stf-top-header">
+            <h1>Smart Text Formatter</h1>
+            <div class="stf-stats">
+                <span>W: <strong id="wordCount">0</strong></span>
+                <span>C: <strong id="charCount">0</strong></span>
+                <span>No Space: <strong id="charNoSpaceCount">0</strong></span>
+                <span>L: <strong id="lineCount">0</strong></span>
+            </div>
+        </div>
+
+        <!--एडिटर बॉक्स-->
+        <div class="stf-editor-area">
+            <div class="stf-editor-top-bar">
+                <label>टेक्स्ट यहाँ लिखें या पेस्ट करें:</label>
+                <div class="stf-top-actions">
+                    <span class="stf-toast" id="toastMsg">✔ कॉपी हुआ!</span>
+                    <button class="btn-copy" onclick="copyText()">Copy Text</button>
+                    <button class="btn-danger" onclick="clearText()">Clear All</button>
+                </div>
+            </div>
+            <textarea id="mainText" oninput="updateStats()" placeholder="जैसे: upsssc vdo re exam date out download pdf notification..."></textarea>
+        </div>
+
+        <!--शॉर्ट फॉर्म्स बार-->
+        <div class="stf-acronym-row">
+            <label>Short Forms:</label>
+            <input id="acronymList" oninput="saveAcronyms()" type="text" value="SSC, UPSC, UPSSSC, UPPRPB, RRB, CGL, CHSL, MTS, GD, NTPC, SI, ASI, Constable, ITBP, CISF, BSF, CRPF, SSB, NDA, CDS, AFCAT, CTET, UPTET, MPESB, REET, NTA, NEET, JEE, PDF, FAQ, FAQs, OT, PET, PST, CBT, DV, Sarkari, Job, Result" />
+        </div>
+
+        <!--बॉटम कंट्रोल मेन्यू-->
+        <div class="stf-bottom-controls">
+            <div class="stf-btn-row">
+                <button class="btn-highlight" onclick="toSmartTitleCase()">Smart Title Case</button>
+                <button onclick="toSentenceCase()">Sentence case</button>
+                <button onclick="toUpperCase()">UPPERCASE</button>
+                <button onclick="toLowerCase()">lowercase</button>
+                
+                <!-- 100% Accurate Translation Buttons -->
+                <button class="btn-trans" id="btn_hi_en" onclick="translateEngine('hi_en')">Hindi ➔ Eng</button>
+                <button class="btn-trans" id="btn_en_hi" onclick="translateEngine('en_hi')">Eng ➔ Hindi</button>
+                
+                <button class="btn-hinglish" id="btn_hi_hg" onclick="translateEngine('hi_hg')">Hindi ➔ Hinglish</button>
+                <button class="btn-hinglish" id="btn_hg_hi" onclick="translateEngine('hg_hi')">Hinglish ➔ Hindi</button>
+
+                <!-- स्लग बटन्स -->
+                <button onclick="toSlug()">Text ➔ Slug</button>
+                <button class="btn-reverse" onclick="slugToText()">Slug ➔ Text</button>
+                <button class="btn-reverse" onclick="slugToSmartTitle()">Slug ➔ Smart Title</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const textInput = document.getElementById('mainText');
+const acronymInput = document.getElementById('acronymList');
+const charCountEl = document.getElementById('charCount');
+const charNoSpaceCountEl = document.getElementById('charNoSpaceCount');
+const wordCountEl = document.getElementById('wordCount');
+const lineCountEl = document.getElementById('lineCount');
+const toastMsg = document.getElementById('toastMsg');
+
+let cachedAcronymMap = {};
+// Single Master Cache for blazing fast repeat queries
+let stfCache = JSON.parse(localStorage.getItem('stf_master_cache') || '{}');
+
+function initApp() {
+    if (localStorage.getItem('custom_acronyms')) {
+        acronymInput.value = localStorage.getItem('custom_acronyms');
+    }
+    updateAcronymMap();
+}
+
+function updateAcronymMap() {
+    const list = acronymInput.value.split(',').map(item => item.trim()).filter(Boolean);
+    cachedAcronymMap = {};
+    for (let i = 0; i < list.length; i++) {
+        cachedAcronymMap[list[i].toLowerCase()] = list[i];
+    }
+}
+
+function saveAcronyms() {
+    localStorage.setItem('custom_acronyms', acronymInput.value);
+    updateAcronymMap();
+}
+
+function updateStats() {
+    const text = textInput.value;
+    const len = text.length;
+    charCountEl.innerText = len;
+    
+    if (len === 0) {
+        charNoSpaceCountEl.innerText = 0;
+        wordCountEl.innerText = 0;
+        lineCountEl.innerText = 0;
+        return;
+    }
+
+    charNoSpaceCountEl.innerText = text.replace(/\s/g, '').length;
+    const words = text.match(/\S+/g);
+    wordCountEl.innerText = words ? words.length : 0;
+
+    let lines = 1;
+    for (let i = 0; i < len; i++) {
+        if (text[i] === '\n') lines++;
+    }
+    lineCountEl.innerText = text.trim() === '' ? 0 : lines;
+}
+
+// Formatting Tools (Instant)
+function toSmartTitleCase() {
+    let words = textInput.value.toLowerCase().split(/(\s+|[-_()/]+)/);
+    let result = '';
+    for (let i = 0; i < words.length; i++) {
+        let w = words[i];
+        if (!w || /^\s+$/.test(w) || /^[-_()/]+$/.test(w)) {
+            result += w;
+        } else if (cachedAcronymMap[w]) {
+            result += cachedAcronymMap[w];
+        } else {
+            result += w.charAt(0).toUpperCase() + w.slice(1);
+        }
+    }
+    textInput.value = result;
+    updateStats();
+}
+
+function toSentenceCase() {
+    let str = textInput.value.toLowerCase();
+    textInput.value = str.replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase());
+    updateStats();
+}
+function toUpperCase() { textInput.value = textInput.value.toUpperCase(); updateStats(); }
+function toLowerCase() { textInput.value = textInput.value.toLowerCase(); updateStats(); }
+function toSlug() {
+    let str = textInput.value.toLowerCase().trim();
+    textInput.value = str.replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
+    updateStats();
+}
+function slugToText() {
+    let str = textInput.value.trim().replace(/https?:\/\/[^\/]+\//g, '').replace(/\.html?$/i, '');
+    textInput.value = str.replace(/[-_+/]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+    updateStats();
+}
+function slugToSmartTitle() { slugToText(); toSmartTitleCase(); }
+
+// ⚡ Accurate & Fast Master Translation Engine
+async function translateEngine(mode) {
+    const text = textInput.value.trim();
+    if (!text) return alert('कृपया बदलने के लिए टेक्स्ट दर्ज करें!');
+
+    const configs = {
+        'hi_en': { btnId: 'btn_hi_en', sl: 'hi', tl: 'en', dt: 't' },
+        'en_hi': { btnId: 'btn_en_hi', sl: 'en', tl: 'hi', dt: 't' },
+        'hi_hg': { btnId: 'btn_hi_hg', sl: 'hi', tl: 'en', dt: 'rm' },
+        'hg_hi': { btnId: 'btn_hg_hi', sl: 'en', tl: 'hi', dt: 't' } 
+    };
+
+    const conf = configs[mode];
+    const btn = document.getElementById(conf.btnId);
+    const originalBtnText = btn.innerText;
+
+    // 0ms Cache Response
+    const cacheKey = mode + '_' + text;
+    if (stfCache[cacheKey]) {
+        textInput.value = stfCache[cacheKey];
+        return updateStats();
+    }
+
+    btn.innerText = 'Wait...';
+    btn.disabled = true;
+
+    try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${conf.sl}&tl=${conf.tl}&dt=${conf.dt}&q=${encodeURIComponent(text)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        
+        let converted = '';
+        if (data && data[0]) {
+            for (let i = 0; i < data[0].length; i++) {
+                if (mode === 'hi_hg') {
+                    // Extract Romanized String for Hinglish
+                    converted += (data[0][i][3] || data[0][i][0] || '');
+                } else {
+                    converted += (data[0][i][0] || '');
+                }
+            }
+        }
+        
+        if (converted) {
+            textInput.value = converted;
+            stfCache[cacheKey] = converted;
+            localStorage.setItem('stf_master_cache', JSON.stringify(stfCache));
+        }
+    } catch (e) {
+        alert('नेटवर्क एरर! कृपया इंटरनेट कनेक्शन चेक करें।');
+    }
+
+    updateStats();
+    btn.innerText = originalBtnText;
+    btn.disabled = false;
+}
+
+function copyText() {
+    if (!textInput.value) return alert('कॉपी करने के लिए टेक्स्ट दर्ज करें!');
+    textInput.select();
+    navigator.clipboard.writeText(textInput.value).then(() => {
+        toastMsg.style.display = 'inline';
+        setTimeout(() => { toastMsg.style.display = 'none'; }, 2000);
+    });
+}
+
+function clearText() { textInput.value = ''; updateStats(); }
+
+initApp();
+</script>
