@@ -1,0 +1,1628 @@
+<!-- Voice Typing & Smart Formatter Integrated Tool (Combined Action & Mic Row) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+<style>
+    /* Material Icons Fix */
+    .material-icons-outlined {
+        font-family: 'Material Icons Outlined' !important;
+        font-weight: normal;
+        font-style: normal;
+        font-size: 18px; 
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* 100% Fixed Screen Settings */
+    html, body {
+        overflow: hidden !important;
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+        background-color: #f1f5f9 !important;
+    }
+    html::-webkit-scrollbar, body::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    header, footer, nav, aside, #header, #footer, #sidebar, #sidebar-wrapper, 
+    .sidebar, .sidebar-wrapper, .sidebar-container, .header-widget, .blog-pager, 
+    .post-title, .entry-title, .post-header, .comments, #comments, .breadcrumbs {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        visibility: hidden !important;
+    }
+
+    .vt-screen-overlay {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background-color: #f1f5f9 !important;
+        z-index: 999999 !important;
+        margin: 0 !important;
+        padding: 6px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        overflow: hidden !important;
+    }
+
+    .vt-screen-overlay * {
+        box-sizing: border-box;
+        font-family: 'Mukta', sans-serif;
+    }
+
+    /* Box Padding */
+    .vt-box {
+        width: 100%;
+        height: 100%;
+        background: #ffffff;
+        padding: 6px 8px; 
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; 
+    }
+
+    .vt-header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2px;
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    .vt-box h2 {
+        margin: 0;
+        color: #0f172a;
+        font-size: 0.95rem;
+        line-height: 1.1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .vt-lang-switch {
+        display: flex;
+        background: #e2e8f0;
+        border-radius: 6px;
+        padding: 2px;
+        flex-shrink: 0;
+    }
+
+    .vt-btn-lang {
+        padding: 2px 6px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 4px;
+        background: transparent;
+        color: #475569;
+        cursor: pointer;
+        transition: 0.15s ease;
+        white-space: nowrap;
+    }
+
+    .vt-btn-lang.active {
+        background: #2563eb;
+        color: #ffffff;
+    }
+
+    /* Status Bar Compact */
+    #vtStatus {
+        padding: 2px 6px;
+        background: #e0f2fe;
+        color: #0369a1;
+        border-radius: 5px;
+        margin-bottom: 2px;
+        font-weight: 600;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Combined Action & Mic Button Row */
+    .vt-action-row {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 4px;
+        flex-shrink: 0;
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .vt-box button.vt-btn-act {
+        font-weight: 600;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.15s ease;
+        white-space: nowrap;
+        background: #e2e8f0;
+        color: #1e293b;
+        padding: 3px 4px;
+        font-size: 0.75rem;
+        flex: 1;
+        text-align: center;
+    }
+
+    .vt-btn-act:hover {
+        background: #cbd5e1;
+    }
+
+    #vtMicBtn {
+        background: #2563eb;
+        color: #fff;
+        padding: 3px 8px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: 0.15s ease;
+        flex: 1.5; /* Slightly more space for the text */
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    #vtMicBtn.recording {
+        background: #dc2626;
+    }
+
+    /* Google Docs Style Toolbar Compact */
+    .docs-toolbar-wrapper {
+        position: relative;
+        width: 100%;
+        flex-shrink: 0;
+    }
+
+    .docs-toolbar {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        background: #f8fafd;
+        padding: 2px 4px;
+        border: 1.5px solid #cbd5e1;
+        border-bottom: none;
+        border-radius: 6px 6px 0 0;
+        gap: 2px;
+    }
+
+    .docs-toolbar-more {
+        display: none;
+        position: absolute;
+        top: calc(100% + 2px);
+        right: 0;
+        background: #f8fafd;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 2px;
+        gap: 2px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        z-index: 1000;
+        align-items: center;
+        flex-wrap: wrap;
+        max-width: 100%;
+    }
+
+    .docs-btn {
+        background: transparent;
+        border: none;
+        border-radius: 4px;
+        padding: 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #444746;
+        cursor: pointer;
+        transition: background 0.15s;
+        height: 24px;
+        min-width: 24px;
+    }
+
+    .docs-btn:hover { background: #e1e5ea; }
+    .docs-btn.active-more { background: #d3e3fd; color: #0b57d0; }
+
+    .docs-divider {
+        width: 1px;
+        height: 16px;
+        background: #c7c7c7;
+        margin: 0 2px;
+        flex-shrink: 0;
+    }
+
+    .docs-select {
+        border: none;
+        background: transparent;
+        font-family: 'Mukta', sans-serif;
+        color: #444746;
+        font-size: 0.75rem;
+        cursor: pointer;
+        outline: none;
+        padding: 1px 2px;
+        border-radius: 4px;
+    }
+    
+    .docs-select:hover { background: #e1e5ea; }
+
+    .docs-font-size {
+        display: flex;
+        align-items: center;
+        border: 1px solid #747775;
+        border-radius: 4px;
+        overflow: hidden;
+        height: 20px;
+    }
+
+    .docs-font-size button {
+        background: transparent;
+        border: none;
+        padding: 0 2px;
+        cursor: pointer;
+        color: #444746;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .docs-font-size button:hover { background: #e1e5ea; }
+    
+    .docs-font-size input {
+        width: 24px;
+        text-align: center;
+        border: none;
+        border-left: 1px solid #747775;
+        border-right: 1px solid #747775;
+        font-family: 'Mukta', sans-serif;
+        font-size: 0.75rem;
+        outline: none;
+        height: 100%;
+        color: #444746;
+    }
+
+    .color-picker-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .color-picker-wrapper input[type="color"] {
+        position: absolute;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    /* Editor Area - MAXIMIZED */
+    #vtTxtArea {
+        flex: 1 1 auto;
+        width: 100%;
+        min-height: 150px;
+        padding: 8px;
+        font-size: 1rem;
+        line-height: 1.5;
+        border: 1.5px solid #cbd5e1;
+        border-top: 1px solid #e2e8f0;
+        border-radius: 0 0 6px 6px;
+        outline: none;
+        overflow-y: auto;
+        background: #ffffff;
+        white-space: pre-wrap;
+        word-break: break-word;
+        margin-bottom: 4px;
+    }
+    
+    #vtTxtArea::-webkit-scrollbar { width: 6px; }
+    #vtTxtArea::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+    #vtTxtArea:focus { border-color: #2563eb; }
+    #vtTxtArea[placeholder]:empty:before { content: attr(placeholder); color: #94a3b8; cursor: text; }
+    #vtTxtArea h1 { font-size: 1.7em; font-weight: bold; margin-top: 0.2em; margin-bottom: 0.2em; }
+    #vtTxtArea h2 { font-size: 1.4em; font-weight: bold; margin-top: 0.2em; margin-bottom: 0.2em; }
+    #vtTxtArea h3 { font-size: 1.15em; font-weight: bold; margin-top: 0.2em; margin-bottom: 0.2em; }
+    #vtTxtArea p { margin-top: 0; margin-bottom: 0.4em; }
+    #vtTxtArea ul, #vtTxtArea ol { padding-left: 1.5em; margin-top: 0.2em; margin-bottom: 0.2em; }
+    #vtTxtArea b, #vtTxtArea strong { font-weight: 700; color: #0f172a; }
+
+    /* Bottom STF Controls Compact */
+    .stf-bottom-controls {
+        display: flex;
+        background: #fdfdfd;
+        border: 1px solid #e2e8f0;
+        padding: 3px;
+        border-radius: 6px;
+        flex-shrink: 0;
+        margin-bottom: 2px;
+    }
+    .stf-btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+        width: 100%;
+    }
+    .stf-btn-row button {
+        padding: 2px 4px;
+        border: 1px solid #003366;
+        background-color: #fff;
+        color: #003366;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.68rem;
+        font-weight: 600;
+        transition: all 0.15s ease;
+        flex: 1 1 auto;
+        text-align: center;
+    }
+    .stf-btn-row button:hover { background-color: #003366; color: #fff; }
+    .stf-btn-row .btn-highlight { background-color: #003366; color: #fff; }
+    .stf-btn-row .btn-highlight:hover { background-color: #002244; }
+    .stf-btn-row .btn-reverse { border-color: #e67e22; color: #d35400; background-color: #fff8f2; }
+    .stf-btn-row .btn-reverse:hover { background-color: #e67e22; color: #fff; }
+    .stf-btn-row .btn-trans { border-color: #1a73e8; color: #1a73e8; background-color: #e8f0fe; }
+    .stf-btn-row .btn-trans:hover { background-color: #1a73e8; color: #fff; }
+    .stf-btn-row .btn-hinglish { border-color: #8e44ad; color: #8e44ad; background-color: #fbf5fc; }
+    .stf-btn-row .btn-hinglish:hover { background-color: #8e44ad; color: #fff; }
+
+    /* Footer / Stats Compact & Resized to Match Guide */
+    .vt-footer-wrap {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding-bottom: 2px;
+    }
+    .vt-count {
+        color: #003366;
+        font-size: 0.6rem; /* Reduced to match guide */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        margin-bottom: 2px;
+    }
+    .vt-count span b {
+        background: #eef3f8;
+        padding: 0px 4px;
+        border-radius: 4px;
+        border: 1px solid #d0dbe5;
+        font-weight: 700;
+    }
+
+    /* Always Visible Details Container */
+    .vt-footer-details {
+        display: flex; 
+        flex-direction: column;
+        gap: 4px;
+        margin-top: 2px;
+    }
+
+    .stf-acronym-row {
+        background: #fafbfc;
+        border: 1px dashed #003366;
+        padding: 2px 4px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+    }
+    .stf-acronym-row label {
+        font-size: 0.6rem; /* Reduced to match guide */
+        font-weight: 700;
+        color: #003366;
+        white-space: nowrap;
+        margin: 0;
+    }
+    .stf-acronym-row input {
+        flex: 1;
+        border: 1px solid #ccd6e0;
+        padding: 1px 4px;
+        border-radius: 4px;
+        font-size: 0.6rem; /* Reduced to match guide */
+        outline: none;
+        min-width: 40px;
+    }
+
+    .vt-guide {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 5px;
+        padding: 4px 6px;
+        font-size: 0.6rem;
+        color: #475569;
+        max-height: 40px;
+        overflow-y: auto;
+        line-height: 1.2;
+        flex-shrink: 0;
+    }
+    .vt-guide b { color: #1e293b; }
+
+    @media (max-width: 480px) {
+        .vt-screen-overlay { padding: 4px !important; }
+        .vt-box { padding: 6px 8px; }
+        .vt-box h2 { font-size: 0.95rem; }
+        .vt-btn-lang { padding: 2px 6px; font-size: 0.75rem; }
+        #vtStatus { font-size: 0.78rem; padding: 3px 6px; }
+        .vt-box button.vt-btn-act { padding: 2px 3px; font-size: 0.7rem; }
+        #vtMicBtn { padding: 2px 6px; font-size: 0.7rem; }
+        #vtTxtArea { font-size: 0.92rem; padding: 8px; min-height: 80px; }
+        .stf-btn-row button { font-size: 0.68rem; padding: 3px 4px; }
+        
+        .vt-count, .stf-acronym-row label, .stf-acronym-row input { font-size: 0.62rem; } /* Matches mobile guide size */
+        .vt-guide { font-size: 0.62rem; max-height: 55px; }
+        
+        .docs-toolbar, .docs-toolbar-more { padding: 2px 4px; }
+        .docs-select { font-size: 0.7rem; }
+        .docs-btn { height: 24px; min-width: 24px; }
+    }
+</style>
+
+<div class="vt-screen-overlay">
+    <div class="vt-box">
+        <!-- Header -->
+        <div class="vt-header-top">
+            <h2>Voice Typing & Formatting</h2>
+            <div class="vt-lang-switch">
+                <button type="button" class="vt-btn-lang active" id="vtBtnHi" onclick="vtSetLanguage('hi-IN')">हिंदी</button>
+                <button type="button" class="vt-btn-lang" id="vtBtnEn" onclick="vtSetLanguage('en-IN')">English</button>
+            </div>
+        </div>
+
+        <!-- Google Docs Toolbar Wrapper -->
+        <div class="docs-toolbar-wrapper">
+            <!-- Main Toolbar -->
+            <div class="docs-toolbar">
+                <button class="docs-btn" onmousedown="event.preventDefault();" title="Search"><span class="material-icons-outlined">search</span></button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="document.execCommand('undo')" title="Undo"><span class="material-icons-outlined">undo</span></button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="document.execCommand('redo')" title="Redo"><span class="material-icons-outlined">redo</span></button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="window.print()" title="Print"><span class="material-icons-outlined">print</span></button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" title="Paint format"><span class="material-icons-outlined">format_paint</span></button>
+                
+                <select class="docs-select" title="Zoom">
+                    <option>100%</option>
+                </select>
+                
+                <div class="docs-divider"></div>
+                
+                <select class="docs-select" onchange="if(this.value) { formatDoc('formatBlock', this.value); this.selectedIndex=0; }" title="Styles">
+                    <option value="" hidden disabled selected>Normal text</option>
+                    <option value="P">Normal text</option>
+                    <option value="H1">Heading 1</option>
+                    <option value="H2">Heading 2</option>
+                    <option value="H3">Heading 3</option>
+                </select>
+                
+                <div class="docs-divider"></div>
+                
+                <select class="docs-select" onchange="formatDoc('fontName', this.value)" title="Font">
+                    <option value="Mukta">Mukta</option>
+                    <option value="Poppins">Poppins</option>
+                    <option value="Arial">Arial</option>
+                    <option value="Courier New">Courier</option>
+                </select>
+                
+                <div class="docs-divider"></div>
+                
+                <div class="docs-font-size" onmousedown="event.preventDefault();" title="Font size">
+                    <button onclick="changeFontSize(-1)"><span class="material-icons-outlined" style="font-size: 14px;">remove</span></button>
+                    <input type="text" id="fontSizeInput" value="11" readonly>
+                    <button onclick="changeFontSize(1)"><span class="material-icons-outlined" style="font-size: 14px;">add</span></button>
+                </div>
+                
+                <div class="docs-divider"></div>
+                
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="formatDoc('bold')" style="font-weight: 700; font-family: serif; font-size: 14px;" title="Bold">B</button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="formatDoc('italic')" style="font-style: italic; font-family: serif; font-size: 14px;" title="Italic">I</button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="formatDoc('underline')" style="text-decoration: underline; font-family: serif; font-size: 14px;" title="Underline">U</button>
+                
+                <div class="color-picker-wrapper">
+                    <button class="docs-btn" onmousedown="event.preventDefault();" title="Text color" style="font-weight: 600; font-family: sans-serif; font-size: 14px; border-bottom: 3px solid #000; padding-bottom: 0px; height: 20px;">A</button>
+                    <input type="color" onchange="formatDoc('foreColor', this.value)">
+                </div>
+                
+                <div class="color-picker-wrapper">
+                    <button class="docs-btn" onmousedown="event.preventDefault();" title="Highlight color">
+                        <span class="material-icons-outlined" style="font-size: 16px;">drive_file_rename_outline</span>
+                    </button>
+                    <input type="color" onchange="formatDoc('hiliteColor', this.value)" value="#ffff00">
+                </div>
+
+                <div class="docs-divider"></div>
+
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="insertLink()" title="Insert link"><span class="material-icons-outlined" style="font-size: 16px;">link</span></button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" title="Add comment"><span class="material-icons-outlined" style="font-size: 16px;">add_comment</span></button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" title="Insert image"><span class="material-icons-outlined" style="font-size: 16px;">image</span></button>
+                
+                <!-- Three Dots (More) Button -->
+                <button class="docs-btn" id="docsMoreBtn" onmousedown="event.preventDefault();" onclick="toggleMoreToolbar()" title="More"><span class="material-icons-outlined" style="font-size: 18px;">more_vert</span></button>
+            </div>
+
+            <!-- Expanded Dropdown Toolbar -->
+            <div class="docs-toolbar-more" id="moreToolbar">
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="formatDoc('justifyLeft')" title="Align"><span class="material-icons-outlined">format_align_left</span><span class="material-icons-outlined" style="font-size: 14px;">arrow_drop_down</span></button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" title="Line spacing"><span class="material-icons-outlined">format_line_spacing</span></button>
+                
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="formatDoc('insertUnorderedList')" title="Checklist"><span class="material-icons-outlined">checklist</span><span class="material-icons-outlined" style="font-size: 14px;">arrow_drop_down</span></button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="formatDoc('insertUnorderedList')" title="Bulleted list"><span class="material-icons-outlined">format_list_bulleted</span><span class="material-icons-outlined" style="font-size: 14px;">arrow_drop_down</span></button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="formatDoc('insertOrderedList')" title="Numbered list"><span class="material-icons-outlined">format_list_numbered</span><span class="material-icons-outlined" style="font-size: 14px;">arrow_drop_down</span></button>
+                
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="formatDoc('outdent')" title="Decrease indent"><span class="material-icons-outlined">format_indent_decrease</span></button>
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="formatDoc('indent')" title="Increase indent"><span class="material-icons-outlined">format_indent_increase</span></button>
+                
+                <button class="docs-btn" onmousedown="event.preventDefault();" onclick="formatDoc('removeFormat')" title="Clear formatting"><span class="material-icons-outlined">format_clear</span></button>
+
+                <div class="docs-divider"></div>
+                
+                <button class="docs-btn" onmousedown="event.preventDefault();" style="font-weight: bold; font-family: Mukta, sans-serif; font-size: 14px;">अ <span class="material-icons-outlined" style="font-size: 14px;">arrow_drop_down</span></button>
+            </div>
+        </div>
+
+        <!-- MAXIMIZED TEXT AREA -->
+        <div id="vtTxtArea" contenteditable="true" placeholder="Text will appear here as you speak..."></div>
+
+        <div id="vtStatus">माइक शुरू करने के लिए बटन दबाएं।</div>
+        
+        <!-- Action & Mic Buttons Row (Combined) -->
+        <div class="vt-action-row">
+            <button type="button" class="vt-btn-act" onclick="vtCopyTxt()">Copy</button>
+            <button type="button" class="vt-btn-act" onclick="vtClearTxt()">Clear</button>
+            <button type="button" class="vt-btn-act" onclick="vtDownloadTxt()">Download</button>
+            <button type="button" id="vtMicBtn" onclick="vtToggleMic()">🎤 Start Speaking</button>
+        </div>
+
+        <div class="stf-bottom-controls">
+            <div class="stf-btn-row">
+                <button class="btn-highlight" onclick="toSmartTitleCase()">Smart Title Case</button>
+                <button onclick="toSentenceCase()">Sentence case</button>
+                <button onclick="toUpperCase()">UPPERCASE</button>
+                <button onclick="toLowerCase()">lowercase</button>
+                
+                <button class="btn-trans" id="btn_hi_en" onclick="translateEngine('hi_en')">Hindi ➔ Eng</button>
+                <button class="btn-trans" id="btn_en_hi" onclick="translateEngine('en_hi')">Eng ➔ Hindi</button>
+                
+                <button class="btn-hinglish" id="btn_hi_hg" onclick="translateEngine('hi_hg')">Hindi ➔ Hinglish</button>
+                <button class="btn-hinglish" id="btn_hg_hi" onclick="translateEngine('hg_hi')">Hinglish ➔ Hindi</button>
+
+                <button onclick="toSlug()">Text ➔ Slug</button>
+                <button class="btn-reverse" onclick="slugToText()">Slug ➔ Text</button>
+                <button class="btn-reverse" onclick="slugToSmartTitle()">Slug ➔ Smart Title</button>
+            </div>
+        </div>
+
+        <!-- Counts, Short Form & Guideline (ALWAYS VISIBLE, Compact) -->
+        <div class="vt-footer-wrap">
+            <div class="vt-count">
+                <span>W: <b id="wordCount">0</b> | C: <b id="charCount">0</b> | No Space: <b id="charNoSpaceCount">0</b> | L: <b id="lineCount">0</b></span>
+                <span style="font-size: 0.6rem; color:#64748b;">Font: Mukta</span>
+            </div>
+
+            <!-- Always visible details -->
+            <div class="vt-footer-details" id="vtFooterDetails">
+                <div class="stf-acronym-row">
+                    <label>Short Forms:</label>
+                    <input id="acronymList" oninput="saveAcronyms()" type="text" value="SSC, UPSC, UPSSSC, UPPRPB, RRB, CGL, CHSL, MTS, GD, NTPC, SI, ASI, Constable, ITBP, CISF, BSF, CRPF, SSB, NDA, CDS, AFCAT, CTET, UPTET, MPESB, REET, NTA, NEET, JEE, PDF, FAQ, FAQs, OT, PET, PST, CBT, DV, Sarkari, Job, Result" />
+                </div>
+                <div id="vtGuideBox" class="vt-guide">
+                    <b>हिंदी गाइड:</b> पूर्ण विराम / Full Stop (.) | अल्पविराम / Comma (,) | प्रश्न चिन्ह / Question Mark (?) | आश्चर्य सूचक / Exclamation (!) | उपविराम / Colon (:) | अर्धविराम / Semicolon (;) | योजक चिन्ह / Hyphen (-) | निर्देशक चिन्ह / Dash (—) | उद्धरण चिन्ह / Quote (" ") | कोष्ठक / Parenthesis (() | नई पंक्ति / New Line | "बोल्ड" बोलें | "नॉर्मल" बोलें
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+//<![CDATA[
+(function() {
+    var statusDiv = document.getElementById("vtStatus");
+    var micBtn = document.getElementById("vtMicBtn");
+    var txtArea = document.getElementById("vtTxtArea");
+    var btnHi = document.getElementById("vtBtnHi");
+    var btnEn = document.getElementById("vtBtnEn");
+    var guideBox = document.getElementById("vtGuideBox");
+    
+    var cachedAcronymMap = {};
+    var stfCache = JSON.parse(localStorage.getItem('stf_master_cache') || '{}');
+
+    var currentLang = "hi-IN";
+    var isRecording = false;
+    var shouldAutoRestart = false;
+    var isBoldMode = false;
+    var isBulletMode = false;
+    var activeUserRange = null;
+
+    var audioCtx = null;
+    var mediaStreamSource = null;
+    var gainNode = null;
+    var pauseTimer = null;
+
+    var savedDraft = localStorage.getItem("vt_saved_html") || "";
+    txtArea.innerHTML = savedDraft;
+
+    var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    var TXT_NOT_SUPPORTED = "This browser does not support voice typing. Please use Chrome.";
+    var TXT_LANG_HI = "Language: हिंदी selected.";
+    var TXT_LANG_EN = "Language: English selected.";
+    var TXT_STOP_MIC = "⏹️ Stop";
+    var TXT_START_MIC = "🎤 Start Speaking";
+    var TXT_MIC_OFF = "Mic is off.";
+    var TXT_MIC_DENIED = "Please allow microphone access.";
+    var TXT_COPIED = "Copied!";
+    var TXT_DL_EMPTY = "Please speak something first to download!";
+
+    window.formatDoc = function(cmd, value = null) {
+        document.execCommand(cmd, false, value);
+        txtArea.focus();
+        updateCounts();
+        localStorage.setItem("vt_saved_html", txtArea.innerHTML);
+    };
+
+    window.insertLink = function() {
+        var url = prompt("Enter the link URL:", "http://");
+        if (url) {
+            formatDoc('createLink', url);
+        }
+    };
+
+    window.changeFontSize = function(step) {
+        var input = document.getElementById("fontSizeInput");
+        var currentSize = parseInt(input.value);
+        var newSize = currentSize + step;
+        if(newSize >= 1 && newSize <= 7) {
+            input.value = newSize;
+            formatDoc("fontSize", newSize);
+        }
+    };
+
+    window.toggleMoreToolbar = function() {
+        var moreBar = document.getElementById('moreToolbar');
+        var moreBtn = document.getElementById('docsMoreBtn');
+        if (moreBar.style.display === 'none' || moreBar.style.display === '') {
+            moreBar.style.display = 'flex';
+            moreBtn.classList.add('active-more');
+        } else {
+            moreBar.style.display = 'none';
+            moreBtn.classList.remove('active-more');
+        }
+    };
+
+    function getParaCmdRegex() {
+        return (currentLang === 'hi-IN') 
+            ? /(?:नया\s*अनुच्छेद|नया\s*पैराग्राफ|न्यू\s*पैराग्राफ|न्यू\s*पैरा|new\s*paragraph|new\s*para|naya\s*paragraph|naya\s*para)/gi
+            : /(?:new\s*paragraph|new\s*para)/gi;
+    }
+
+    if (!SpeechRecognition) {
+        statusDiv.style.background = "#fee2e2";
+        statusDiv.style.color = "#b91c1c";
+        statusDiv.innerHTML = TXT_NOT_SUPPORTED;
+        micBtn.disabled = true;
+    }
+
+    var rec = SpeechRecognition ? new SpeechRecognition() : null;
+
+    function syncSelection(range) {
+        var sel = window.getSelection();
+        if (sel) {
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+    }
+
+    function recordUserSelection() {
+        var selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+            var range = selection.getRangeAt(0);
+            if (txtArea.contains(range.commonAncestorContainer)) {
+                activeUserRange = range.cloneRange();
+                return;
+            }
+        }
+        activeUserRange = null;
+    }
+
+    txtArea.addEventListener("mouseup", recordUserSelection);
+    txtArea.addEventListener("keyup", recordUserSelection);
+    txtArea.addEventListener("touchend", recordUserSelection);
+
+    document.addEventListener("mousedown", function(e) {
+        if (e.target.closest('.docs-toolbar') || e.target.closest('.docs-toolbar-more') || e.target.closest('.color-picker-wrapper')) return; 
+        if (!txtArea.contains(e.target)) {
+            activeUserRange = null;
+        }
+    });
+
+    window.vtSetLanguage = function(lang) {
+        if (currentLang === lang) return;
+        currentLang = lang;
+        if (lang === 'hi-IN') {
+            btnHi.classList.add('active');
+            btnEn.classList.remove('active');
+            statusDiv.innerHTML = TXT_LANG_HI;
+            guideBox.innerHTML = '<b>हिंदी गाइड:</b> पूर्ण विराम / Full Stop (.) | अल्पविराम / Comma (,) | प्रश्न चिन्ह / Question Mark (?) | आश्चर्य सूचक / Exclamation (!) | उपविराम / Colon (:) | अर्धविराम / Semicolon (;) | योजक चिन्ह / Hyphen (-) | निर्देशक चिन्ह / Dash (—) | उद्धरण चिन्ह / Quote (" ") | कोष्ठक / Parenthesis (() | नई पंक्ति / New Line | "बोल्ड" बोलें | "नॉर्मल" बोलें';
+        } else {
+            btnEn.classList.add('active');
+            btnHi.classList.remove('active');
+            statusDiv.innerHTML = TXT_LANG_EN;
+            guideBox.innerHTML = '<b>English Guide:</b> Period (.) | Comma (,) | Question Mark (?) | Exclamation (!) | Colon (:) | Semicolon (;) | Apostrophe (\') | Open/Close Quote (") | Open/Close Parenthesis (() | Open/Close Square ([]) | Open/Close Curly ({}) | Hyphen (-) | Dash (—) | Slash (/) | Backslash (\\) | Ampersand (&) | Asterisk (*) | Underscore (_) | New Line | Say "Bold" | Say "Normal"';
+        }
+        if (rec) {
+            rec.lang = currentLang;
+            if (isRecording) {
+                shouldAutoRestart = true;
+                rec.stop();
+            }
+        }
+    };
+
+    function cleanPunctuation(str) {
+        var text = str;
+        var isHi = (currentLang === 'hi-IN');
+        if (isHi) {
+            text = text.replace(/(पुलिस|कांस्टेबल|कॉन्स्टेबल|रेलवे|दरोगा|शिक्षक|नई|सीधी|असिस्टेंट|क्लर्क|ग्रुप|विभाग|सरकारी)\s+भारती/gi, "$1 भर्ती");
+            text = text.replace(/भारती\s+(प्रक्रिया|बोर्ड|विज्ञापन|सूचना|नोटिफिकेशन|नियम|आवेदन|फॉर्म|परीक्षा|अपडेट)/gi, "भर्ती $1");
+            text = text.replace(/(?:\s*)(?:पूर्ण\s*विराम|फुलस्टॉप|फुल\s*स्टॉप|full\s*stop|period|dot)(?:\s*चिन्ह|mark)?(?=\s|$|\b)/gi, "।");
+            text = text.replace(/(?:\s*)(?:अल्प\s*विराम|अल्पविराम|कोमा|कॉमा|comma|coma)(?:\s*चिन्ह|mark)?(?=\s|$|\b)/gi, ",");
+            text = text.replace(/(?:\s*)(?:प्रश्न\s*वाचक|प्रश्न\s*चिन्ह|प्रश्नवाचक\s*चिन्ह|क्वेश्कन\s*मार्क|question\s*mark)(?:\s*चिन्ह)?(?=\s|$|\b)/gi, "?");
+            text = text.replace(/(?:\s*)(?:विस्मय\s*(बोधक|सूचक)|आश्चर्य\s*सूचक|विस्मयादिबोधक|एक्सक्लेमेशन\s*(?:मार्क|पॉइंट)|exclamation\s*(?:mark|point))(?:\s*चिन्ह)?(?=\s|$|\b)/gi, "!");
+            text = text.replace(/(?:\s*)(?:उपविराम|कोलन|colon)(?=\s|$|\b)/gi, ":");
+            text = text.replace(/(?:\s*)(?:अर्धविराम|सेमीकोलन|semicolon)(?=\s|$|\b)/gi, ";");
+            text = text.replace(/(?:\s*)(?:योजक\s*चिन्ह|हाइफन|hyphen)(?=\s|$|\b)/gi, "-");
+            text = text.replace(/(?:\s*)(?:निर्देशक\s*चिन्ह|डैश|dash)(?=\s|$|\b)/gi, "—");
+            text = text.replace(/(?:\s*)(?:उद्धरण\s*चिन्ह|ओपन\s*कोट|ओपनिंग\s*कोट|open\s*quote|opening\s*quote)(?=\s|$|\b)/gi, "\"");
+            text = text.replace(/(?:\s*)(?:क्लोज\s*कोट|क्लोजिंग\s*कोट|close\s*quote|closing\s*quote)(?=\s|$|\b)/gi, "\"");
+            text = text.replace(/(?:\s*)(?:ओपन\s*सिंगल\s*कोट|open\s*single\s*quote)(?=\s|$|\b)/gi, "'");
+            text = text.replace(/(?:\s*)(?:क्लोज\s*सिंगल\s*कोट|close\s*single\s*quote)(?=\s|$|\b)/gi, "'");
+            text = text.replace(/(?:\s*)(?:कोष्ठक\s*शुरू|ओपन\s*(?:पैराथेसिस|ब्रैकेट|कोष्टक)|open\s*(?:parenthesis|bracket))(?=\s|$|\b)/gi, "(");
+            text = text.replace(/(?:\s*)(?:कोष्ठक\s*बंद|बंद\s*(?:ब्रैकेट|कोष्टक)|क्लोज\s*(?:पैराथेसिस|ब्रैकेट|कोष्टक)|close\s*(?:parenthesis|bracket))(?=\s|$|\b)/gi, ")");
+            text = text.replace(/(?:\s*)(?:ओपन\s*स्क्वायर\s*ब्रैकेट|open\s*square\s*bracket)(?=\s|$|\b)/gi, "[");
+            text = text.replace(/(?:\s*)(?:क्लोज\s*स्क्वायर\s*ब्रैकेट|close\s*square\s*bracket)(?=\s|$|\b)/gi, "]");
+            text = text.replace(/(?:\s*)(?:ओपन\s*कर्ली\s*ब्रैकेट|open\s*curly\s*bracket)(?=\s|$|\b)/gi, "{");
+            text = text.replace(/(?:\s*)(?:क्लोज\s*कर्ली\s*ब्रैकेट|close\s*curly\s*bracket)(?=\s|$|\b)/gi, "}");
+            text = text.replace(/(?:\s*)(?:स्लैश|तिरछी\s*रेखा|फॉरवर्ड\s*स्लैश|slash)(?=\s|$|\b)/gi, "/");
+            text = text.replace(/(?:\s*)(?:बैकस्लैश|backslash)(?=\s|$|\b)/gi, "\\");
+            text = text.replace(/(?:\s*)(?:एम्परसैंड|ampersand)(?=\s|$|\b)/gi, "&");
+            text = text.replace(/(?:\s*)(?:संकेत\s*चिन्ह|एस्टरिसक|स्टार|asterisk|star)(?=\s|$|\b)/gi, "*");
+            text = text.replace(/(?:\s*)(?:अंडरस्कोर|underscore)(?=\s|$|\b)/gi, "_");
+            text = text.replace(/(?:\s*)(?:नई\s*लाइन|नई\s*पंक्ति|न्यू\s*लाइन|नेक्स्ट\s*लाइन|new\s*line|next\s*line)(?=\s|$|\b)/gi, "\n");
+        } else {
+            text = text.replace(/(?:\s*)(?:period|full\s*stop|point|dot|\b(?:fu(?:l|ll)[\s\-_]*stop|fullstop|period|dot)\b)(?:\s*mark)?(?=\s|$|\b)/gi, ".");
+            text = text.replace(/(?:\s*)(?:comma|coma)(?:\s*mark)?(?=\s|$|\b)/gi, ",");
+            text = text.replace(/(?:\s*)(?:question\s*mark)(?=\s|$|\b)/gi, "?");
+            text = text.replace(/(?:\s*)(?:exclamation\s*(?:mark|point))(?=\s|$|\b)/gi, "!");
+            text = text.replace(/(?:\s*)(?:colon)(?=\s|$|\b)/gi, ":");
+            text = text.replace(/(?:\s*)(?:semicolon)(?=\s|$|\b)/gi, ";");
+            text = text.replace(/(?:\s*)(?:apostrophe)(?=\s|$|\b)/gi, "'");
+            text = text.replace(/(?:\s*)(?:open\s*quote|opening\s*quote)(?=\s|$|\b)/gi, "\"");
+            text = text.replace(/(?:\s*)(?:close\s*quote|closing\s*quote)(?=\s|$|\b)/gi, "\"");
+            text = text.replace(/(?:\s*)(?:open\s*single\s*quote)(?=\s|$|\b)/gi, "'");
+            text = text.replace(/(?:\s*)(?:close\s*single\s*quote)(?=\s|$|\b)/gi, "'");
+            text = text.replace(/(?:\s*)(?:open\s*(?:parenthesis|bracket))(?=\s|$|\b)/gi, "(");
+            text = text.replace(/(?:\s*)(?:close\s*(?:parenthesis|bracket))(?=\s|$|\b)/gi, ")");
+            text = text.replace(/(?:\s*)(?:open\s*square\s*bracket)(?=\s|$|\b)/gi, "[");
+            text = text.replace(/(?:\s*)(?:close\s*square\s*bracket)(?=\s|$|\b)/gi, "]");
+            text = text.replace(/(?:\s*)(?:open\s*curly\s*bracket)(?=\s|$|\b)/gi, "{");
+            text = text.replace(/(?:\s*)(?:close\s*curly\s*bracket)(?=\s|$|\b)/gi, "}");
+            text = text.replace(/(?:\s*)(?:hyphen)(?=\s|$|\b)/gi, "-");
+            text = text.replace(/(?:\s*)(?:dash)(?=\s|$|\b)/gi, "—");
+            text = text.replace(/(?:\s*)(?:forward\s*slash|slash)(?=\s|$|\b)/gi, "/");
+            text = text.replace(/(?:\s*)(?:backslash)(?=\s|$|\b)/gi, "\\");
+            text = text.replace(/(?:\s*)(?:ampersand)(?=\s|$|\b)/gi, "&");
+            text = text.replace(/(?:\s*)(?:asterisk|star)(?=\s|$|\b)/gi, "*");
+            text = text.replace(/(?:\s*)(?:underscore)(?=\s|$|\b)/gi, "_");
+            text = text.replace(/(?:\s*)(?:new\s*line|next\s*line)(?=\s|$|\b)/gi, "\n");
+        }
+        text = text.replace(/\n[ \t]+/g, "\n");
+        text = text.replace(/\s+([।.,?\!:)\]}%\/\\&*_\-])/g, "$1");
+        text = text.replace(/([।.,?\!:)\]}%\/\\&*_\-])(?=[^\s\n।.,?\!:)\]}%\/\\&*_\-])/g, "$1 ");
+        text = text.replace(/(\(|\{|\[)\s+/g, "$1");
+        text = text.replace(/\s+(\)|\}|\])/g, "$1");
+        text = text.replace(/(^|[^\s\n])(\(|\{|\[)/g, "$1 $2");
+        return text;
+    }
+
+    function autoScroll() {
+        var el = null;
+        if (interimSpan && txtArea.contains(interimSpan)) {
+            el = interimSpan;
+        } else if (activeUserRange && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+            var rect = activeUserRange.getBoundingClientRect();
+            var contRect = txtArea.getBoundingClientRect();
+            if (rect.width > 0 || rect.height > 0) {
+                if (rect.bottom > contRect.bottom) {
+                    txtArea.scrollTop += (rect.bottom - contRect.bottom + 20);
+                } else if (rect.top < contRect.top) {
+                    txtArea.scrollTop -= (contRect.top - rect.top + 20);
+                }
+                return;
+            } else {
+                el = activeUserRange.endContainer;
+                if (el && el.nodeType === Node.TEXT_NODE) {
+                    el = el.parentNode;
+                }
+            }
+        }
+        if (el && el.getBoundingClientRect && txtArea.contains(el)) {
+            var eRect = el.getBoundingClientRect();
+            var cRect = txtArea.getBoundingClientRect();
+            if (eRect.bottom > cRect.bottom) {
+                txtArea.scrollTop += (eRect.bottom - cRect.bottom + 20);
+            } else if (eRect.top < cRect.top) {
+                txtArea.scrollTop -= (cRect.top - eRect.top + 20);
+            }
+        } else {
+            txtArea.scrollTop = txtArea.scrollHeight;
+        }
+    }
+
+    function trimTrailingSpaceFromDOM() {
+        var node = txtArea.lastChild;
+        while (node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                if (node.nodeValue.endsWith(" ")) {
+                    node.nodeValue = node.nodeValue.replace(/\s+$/, "");
+                    break;
+                }
+                if (node.nodeValue.length > 0) break;
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                var inner = node.lastChild;
+                while (inner && inner.nodeType === Node.TEXT_NODE) {
+                    if (inner.nodeValue.endsWith(" ")) {
+                        inner.nodeValue = inner.nodeValue.replace(/\s+$/, "");
+                        break;
+                    }
+                    if (inner.nodeValue.length > 0) break;
+                }
+                break;
+            }
+            node = node.previousSibling;
+        }
+    }
+
+    function commitInstantParagraph() {
+        if (activeUserRange && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+            var prefixRange = document.createRange();
+            prefixRange.selectNodeContents(txtArea);
+            prefixRange.setEnd(activeUserRange.startContainer, activeUserRange.startOffset);
+            var textBefore = prefixRange.toString();
+            var pToAdd = "\n\n";
+            if (textBefore.endsWith("\n\n")) pToAdd = "";
+            else if (textBefore.endsWith("\n")) pToAdd = "\n";
+            else if (textBefore.length === 0) pToAdd = "";
+            
+            if (pToAdd.length > 0) {
+                var pNode = document.createTextNode(pToAdd);
+                activeUserRange.insertNode(pNode);
+                activeUserRange.setStartAfter(pNode);
+                activeUserRange.collapse(true);
+                syncSelection(activeUserRange);
+            }
+        } else {
+            trimTrailingSpaceFromDOM();
+            var curText = txtArea.innerText;
+            if (!curText.endsWith("\n\n")) {
+                if (curText.endsWith("\n")) txtArea.appendChild(document.createTextNode("\n"));
+                else if (curText.length > 0) txtArea.appendChild(document.createTextNode("\n\n"));
+            }
+        }
+        localStorage.setItem("vt_saved_html", txtArea.innerHTML);
+        autoScroll();
+        updateCounts();
+    }
+
+    function processVoiceCommands(rawText) {
+        var text = cleanPunctuation(rawText);
+        var isHi = (currentLang === 'hi-IN');
+        
+        var normalRegex = isHi 
+            ? /(?:^|\s*)(?:नॉर्मल|\bnormal\b|अनबोल्ड|\bunbold\b|(?:बोल्ड|बुलेट)\s*(बंद|क्लोज़?|एंड)|\b(?:bold|bullet)\s*(?:close|end|stop)\b)\s*(.*)$/i
+            : /(?:^|\s*)(?:\bnormal\b|\bunbold\b|\b(?:bold|bullet)\s*(?:close|end|stop)\b)\s*(.*)$/i;
+
+        if (normalRegex.test(text)) {
+            var matchNorm = text.match(normalRegex);
+            isBoldMode = false;
+            isBulletMode = false;
+            return { bold: false, bullet: false, content: cleanPunctuation(matchNorm[1] || "") };
+        }
+
+        var bulletRegex = isHi
+            ? /(?:^|\s*)(?:बुलेट(?:\s*पॉइंट्स?|\s)?|\bbullet(?:\s*points?)?\b)\s*(.*)$/i
+            : /(?:^|\s*)(?:\bbullet(?:\s*points?)?\b)\s*(.*)$/i;
+
+        if (bulletRegex.test(text)) {
+            var matchBullet = text.match(bulletRegex);
+            isBulletMode = true;
+            return { bold: isBoldMode, bullet: true, content: cleanPunctuation(matchBullet[1] || "") };
+        }
+
+        var boldRegex = isHi
+            ? /(?:^|\s*)(?:बोल्ड|\bbold\b)\s*(.*)$/i
+            : /(?:^|\s*)(?:\bbold\b)\s*(.*)$/i;
+
+        if (boldRegex.test(text)) {
+            var matchBold = text.match(boldRegex);
+            isBoldMode = true;
+            return { bold: true, bullet: isBulletMode, content: cleanPunctuation(matchBold[1] || "") };
+        }
+        return { bold: isBoldMode, bullet: isBulletMode, content: text };
+    }
+
+    function appendText(chunk, bold, bullet) {
+        if (!chunk) return;
+        var clean = chunk.replace(/^[ \t]+/, "");
+        if (!clean) return;
+
+        if (activeUserRange && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+            var prefixRange = document.createRange();
+            prefixRange.selectNodeContents(txtArea);
+            prefixRange.setEnd(activeUserRange.startContainer, activeUserRange.startOffset);
+            var beforeText = prefixRange.toString();
+
+            var suffixRange = document.createRange();
+            suffixRange.selectNodeContents(txtArea);
+            suffixRange.setStart(activeUserRange.endContainer, activeUserRange.endOffset);
+            var afterText = suffixRange.toString();
+
+            if (beforeText.endsWith("\n\n")) clean = clean.replace(/^\n+/, "");
+            else if (beforeText.endsWith("\n")) clean = clean.replace(/^\n\n+/, "\n");
+
+            var startsWithPunct = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(clean);
+
+            if (startsWithPunct && /[\s\u00A0]+$/.test(beforeText)) {
+                var spaceMatch = beforeText.match(/[\s\u00A0]+$/);
+                var spaceCount = spaceMatch ? spaceMatch[0].length : 0;
+                var node = activeUserRange.startContainer;
+                var offset = activeUserRange.startOffset;
+                
+                var deletedNatively = false;
+                if (node.nodeType === Node.TEXT_NODE && offset >= spaceCount) {
+                    var textBeforeCursor = node.nodeValue.substring(0, offset);
+                    if (/[\s\u00A0]+$/.test(textBeforeCursor)) {
+                        var localSpaces = textBeforeCursor.match(/[\s\u00A0]+$/)[0].length;
+                        if (localSpaces === spaceCount) {
+                            node.deleteData(offset - spaceCount, spaceCount);
+                            activeUserRange.setStart(node, offset - spaceCount);
+                            activeUserRange.collapse(true);
+                            deletedNatively = true;
+                        }
+                    }
+                }
+                if (!deletedNatively) {
+                    syncSelection(activeUserRange);
+                    for(var s = 0; s < spaceCount; s++) document.execCommand("delete", false, null);
+                    recordUserSelection();
+                }
+                if (activeUserRange) {
+                    prefixRange.selectNodeContents(txtArea);
+                    prefixRange.setEnd(activeUserRange.startContainer, activeUserRange.startOffset);
+                    beforeText = prefixRange.toString();
+                }
+            }
+
+            var textToInsert = clean;
+
+            if (bullet) {
+                if (!beforeText.endsWith("\n") && beforeText.length > 0) textToInsert = "\n" + textToInsert;
+                if (!beforeText.endsWith("• ")) textToInsert = "• " + textToInsert;
+            } else {
+                var isNewlineStart = /^[\n]/.test(clean);
+                var needsLeadingSpace = beforeText.length > 0 && 
+                                         !beforeText.endsWith("\n") && 
+                                         !beforeText.endsWith(" ") && 
+                                         !beforeText.endsWith("(") && 
+                                         !beforeText.endsWith("{") && 
+                                         !beforeText.endsWith("[") && 
+                                         !beforeText.endsWith("\"") && 
+                                         !beforeText.endsWith("'") && 
+                                         !startsWithPunct && 
+                                         !isNewlineStart;
+                if (needsLeadingSpace) textToInsert = " " + textToInsert;
+            }
+
+            if (afterText.length > 0) {
+                var nextChar = afterText.charAt(0);
+                if (!/[ \n\t।.,?\!:)\]}%\/\\&*_\-]/.test(nextChar) && !textToInsert.endsWith(" ")) {
+                    textToInsert = textToInsert + " ";
+                }
+            }
+
+            var insertNode = bold ? document.createElement("b") : document.createTextNode(textToInsert);
+            if (bold) insertNode.innerText = textToInsert;
+
+            activeUserRange.deleteContents();
+            activeUserRange.insertNode(insertNode);
+            activeUserRange.setStartAfter(insertNode);
+            activeUserRange.collapse(true);
+            syncSelection(activeUserRange);
+            
+        } else {
+            var curText = txtArea.innerText;
+            if (curText.endsWith("\n\n")) clean = clean.replace(/^\n+/, "");
+            else if (curText.endsWith("\n")) clean = clean.replace(/^\n\n+/, "\n");
+
+            var startsWithPunctEnd = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(clean);
+            if (startsWithPunctEnd) {
+                trimTrailingSpaceFromDOM();
+                curText = txtArea.innerText;
+            }
+
+            if (bullet) {
+                if (!curText.endsWith("\n") && curText.length > 0) txtArea.appendChild(document.createTextNode("\n"));
+                if (!txtArea.innerText.endsWith("• ")) txtArea.appendChild(document.createTextNode("• "));
+            } else {
+                var isNewlineStartEnd = /^[\n]/.test(clean);
+                var needsSpaceEnd = curText.length > 0 && 
+                                  !curText.endsWith("\n") && 
+                                  !curText.endsWith(" ") && 
+                                  !curText.endsWith("(") && 
+                                  !curText.endsWith("{") && 
+                                  !curText.endsWith("[") && 
+                                  !curText.endsWith("\"") && 
+                                  !curText.endsWith("'") && 
+                                  !startsWithPunctEnd && 
+                                  !isNewlineStartEnd;
+                if (needsSpaceEnd) txtArea.appendChild(document.createTextNode(" "));
+            }
+
+            if (bold) {
+                var boldElem = document.createElement("b");
+                boldElem.innerText = clean;
+                txtArea.appendChild(boldElem);
+            } else {
+                txtArea.appendChild(document.createTextNode(clean));
+            }
+        }
+
+        localStorage.setItem("vt_saved_html", txtArea.innerHTML);
+        autoScroll();
+        updateCounts();
+    }
+
+    function removeInterimSafely() {
+        if (interimSpan && interimSpan.parentNode) {
+            var parent = interimSpan.parentNode;
+            var prevRng = document.createRange();
+            prevRng.setStartBefore(interimSpan);
+            prevRng.collapse(true);
+            parent.removeChild(interimSpan);
+            interimSpan = null;
+            if (activeUserRange && parent.contains(activeUserRange.commonAncestorContainer)) {
+                activeUserRange = prevRng;
+            }
+        }
+    }
+
+    function startAutoPuncTimer() {
+        if (pauseTimer) clearTimeout(pauseTimer);
+        
+        pauseTimer = setTimeout(function() {
+            var puncMark = (currentLang === 'hi-IN') ? "। " : ". ";
+            
+            if (activeUserRange && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+                var prefixRange = document.createRange();
+                prefixRange.selectNodeContents(txtArea);
+                prefixRange.setEnd(activeUserRange.startContainer, activeUserRange.startOffset);
+                var beforeTextLive = prefixRange.toString().replace(/[\s\uFEFF\xA0]+$/g, '');
+                
+                if (beforeTextLive.length > 0) {
+                    var lastChar = beforeTextLive.slice(-1);
+                    if (!/[।.,?!:\-—\n]/.test(lastChar)) appendText(puncMark, false, false);
+                }
+            } else {
+                var curText = txtArea.innerText.replace(/[\s\uFEFF\xA0]+$/g, '');
+                if (curText.length > 0) {
+                    var lastCharEnd = curText.slice(-1);
+                    if (!/[।.,?!:\-—\n]/.test(lastCharEnd)) appendText(puncMark, false, false);
+                }
+            }
+        }, 3000);
+    }
+
+    if (rec) {
+        rec.continuous = true;
+        rec.interimResults = true;
+        rec.maxAlternatives = 1;
+        rec.lang = currentLang;
+
+        rec.onstart = function() {
+            isRecording = true;
+            micBtn.innerHTML = TXT_STOP_MIC;
+            micBtn.className = "recording";
+            statusDiv.style.background = "#dcfce7";
+            statusDiv.style.color = "#15803d";
+            var langLabel = currentLang === 'hi-IN' ? "हिंदी" : 'English';
+            statusDiv.innerHTML = "Mic is on [" + langLabel + "] (Boosted)...";
+        };
+
+        var interimSpan = null;
+
+        rec.onresult = function(e) {
+            if (pauseTimer) clearTimeout(pauseTimer);
+            removeInterimSafely();
+
+            if (activeUserRange && !activeUserRange.collapsed && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+                activeUserRange.deleteContents();
+            }
+
+            var live = "";
+            for (var i = e.resultIndex; i < e.results.length; i++) {
+                var piece = e.results[i][0].transcript;
+                if (e.results[i].isFinal) {
+                    var paraRegex = getParaCmdRegex();
+                    if (paraRegex.test(piece)) {
+                        commitInstantParagraph();
+                        piece = piece.replace(paraRegex, "");
+                    }
+                    var parsed = processVoiceCommands(piece.trimStart());
+                    appendText(parsed.content, parsed.bold, parsed.bullet);
+                } else {
+                    live += piece;
+                }
+            }
+
+            if (live.trim().length > 0) {
+                var paraRegexLive = getParaCmdRegex();
+                if (paraRegexLive.test(live)) {
+                    commitInstantParagraph();
+                    live = live.replace(paraRegexLive, "");
+                }
+
+                var processedLive = processVoiceCommands(live);
+                processedLive.content = processedLive.content.replace(/^[ \t]+/, "");
+
+                if (processedLive.content.length > 0) {
+                    if (activeUserRange && txtArea.contains(activeUserRange.commonAncestorContainer)) {
+                        var prefixRange = document.createRange();
+                        prefixRange.selectNodeContents(txtArea);
+                        prefixRange.setEnd(activeUserRange.startContainer, activeUserRange.startOffset);
+                        var beforeTextLive = prefixRange.toString();
+
+                        var suffixRange = document.createRange();
+                        suffixRange.selectNodeContents(txtArea);
+                        suffixRange.setStart(activeUserRange.endContainer, activeUserRange.endOffset);
+                        var afterTextLive = suffixRange.toString();
+
+                        var startsWithPunctLive = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(processedLive.content);
+                        var isNewlineStartLive = /^[\n]/.test(processedLive.content);
+                        
+                        var needsSpaceLive = beforeTextLive.length > 0 && 
+                                           !beforeTextLive.endsWith("\n") && 
+                                           !beforeTextLive.endsWith(" ") && 
+                                           !beforeTextLive.endsWith("(") && 
+                                           !beforeTextLive.endsWith("{") && 
+                                           !beforeTextLive.endsWith("[") && 
+                                           !beforeTextLive.endsWith("\"") && 
+                                           !beforeTextLive.endsWith("'") && 
+                                           !startsWithPunctLive && 
+                                           !isNewlineStartLive;
+
+                        var liveContentToInsert = processedLive.content;
+
+                        if (afterTextLive.length > 0) {
+                            var nextCharLive = afterTextLive.charAt(0);
+                            if (!/[ \n\t।.,?\!:)\]}%\/\\&*_\-]/.test(nextCharLive) && !liveContentToInsert.endsWith(" ")) {
+                                liveContentToInsert = liveContentToInsert + " ";
+                            }
+                        }
+
+                        interimSpan = document.createElement(processedLive.bold ? "b" : "span");
+                        interimSpan.style.color = "#64748b";
+                        interimSpan.innerText = (needsSpaceLive ? " " : "") + (processedLive.bullet && !beforeTextLive.endsWith("• ") ? "• " : "") + liveContentToInsert;
+                        
+                        activeUserRange.insertNode(interimSpan);
+                        
+                        var tempRng = document.createRange();
+                        tempRng.setStartAfter(interimSpan);
+                        tempRng.collapse(true);
+                        syncSelection(tempRng);
+
+                    } else {
+                        var curTextLive = txtArea.innerText;
+                        var startsWithPunctLiveEnd = /^[।.,?\!:)\]}%\/\\&*_\-]/.test(processedLive.content);
+                        var isNewlineStartLiveEnd = /^[\n]/.test(processedLive.content);
+                        
+                        var needsSpaceLiveEnd = curTextLive.length > 0 && 
+                                                !curTextLive.endsWith("\n") && 
+                                                !curTextLive.endsWith(" ") && 
+                                                !curTextLive.endsWith("(") && 
+                                                !curTextLive.endsWith("{") && 
+                                                !curTextLive.endsWith("[") && 
+                                                !curTextLive.endsWith("\"") && 
+                                                !curTextLive.endsWith("'") && 
+                                                !startsWithPunctLiveEnd && 
+                                                !isNewlineStartLiveEnd;
+
+                        interimSpan = document.createElement(processedLive.bold ? "b" : "span");
+                        interimSpan.style.color = "#64748b";
+                        interimSpan.innerText = (needsSpaceLiveEnd ? " " : "") + (processedLive.bullet && !curTextLive.endsWith("• ") ? "• " : "") + processedLive.content;
+                        
+                        txtArea.appendChild(interimSpan);
+                    }
+                    autoScroll();
+                }
+            }
+            startAutoPuncTimer();
+        };
+
+        rec.onerror = function(e) {
+            if (e.error === "not-allowed") {
+                alert("Mic is blocked! Please click the Lock icon to Allow Microphone.");
+                statusDiv.innerHTML = TXT_MIC_DENIED;
+            } else if (e.error !== "no-speech") {
+                statusDiv.innerHTML = "Error: " + e.error;
+            }
+        };
+
+        rec.onend = function() {
+            removeInterimSafely();
+
+            if (shouldAutoRestart) {
+                shouldAutoRestart = false;
+                try {
+                    rec.start();
+                    return;
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+
+            isRecording = false;
+            micBtn.innerHTML = TXT_START_MIC;
+            micBtn.className = "";
+            statusDiv.style.background = "#e0f2fe";
+            statusDiv.style.color = "#0369a1";
+            statusDiv.innerHTML = TXT_MIC_OFF;
+            localStorage.setItem("vt_saved_html", txtArea.innerHTML);
+            updateCounts();
+        };
+    }
+
+    async function startAudioBoost() {
+        try {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
+            var stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            mediaStreamSource = audioCtx.createMediaStreamSource(stream);
+            gainNode = audioCtx.createGain();
+            gainNode.gain.value = 2.5; 
+            mediaStreamSource.connect(gainNode);
+        } catch(err) {
+            console.log("Audio boost error: ", err);
+        }
+    }
+
+    window.vtToggleMic = function() {
+        if (!rec) return;
+        if (!isRecording) {
+            shouldAutoRestart = false;
+            rec.lang = currentLang;
+            startAudioBoost();
+            try {
+                rec.start();
+            } catch (err) {
+                rec.stop();
+            }
+        } else {
+            shouldAutoRestart = false;
+            if (pauseTimer) clearTimeout(pauseTimer); 
+            rec.stop();
+            if (audioCtx && audioCtx.state !== 'closed') {
+                audioCtx.close();
+            }
+        }
+    };
+
+    function updateCounts() {
+        var val = txtArea.innerText || "";
+        var len = val.length;
+        document.getElementById("charCount").innerText = len;
+        
+        if (len === 0) {
+            document.getElementById("charNoSpaceCount").innerText = 0;
+            document.getElementById("wordCount").innerText = 0;
+            document.getElementById("lineCount").innerText = 0;
+            return;
+        }
+
+        document.getElementById("charNoSpaceCount").innerText = val.replace(/\s/g, '').length;
+        var words = val.match(/\S+/g);
+        document.getElementById("wordCount").innerText = words ? words.length : 0;
+
+        var lines = 1;
+        for (var i = 0; i < len; i++) {
+            if (val[i] === '\n') lines++;
+        }
+        document.getElementById("lineCount").innerText = val.trim() === '' ? 0 : lines;
+    }
+
+    txtArea.addEventListener("input", function() {
+        localStorage.setItem("vt_saved_html", txtArea.innerHTML);
+        updateCounts();
+    });
+
+    window.vtCopyTxt = function() {
+        var rawText = (txtArea.innerText || "").trim();
+        if (!rawText) return;
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(rawText).then(function() {
+                alert(TXT_COPIED);
+            }).catch(function() {
+                fallbackCopy(rawText);
+            });
+        } else {
+            fallbackCopy(rawText);
+        }
+    };
+
+    function fallbackCopy(text) {
+        var tempInput = document.createElement("textarea");
+        tempInput.value = text;
+        tempInput.style.position = "fixed";
+        tempInput.style.opacity = "0";
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        try {
+            document.execCommand('copy');
+            alert(TXT_COPIED);
+        } catch (err) {}
+        document.body.removeChild(tempInput);
+    }
+
+    window.vtClearTxt = function() {
+        var rawText = (txtArea.innerText || "").trim();
+        if (!rawText) return;
+        if (confirm("Are you sure you want to clear all text?")) {
+            if (pauseTimer) clearTimeout(pauseTimer);
+            txtArea.innerHTML = "";
+            activeUserRange = null;
+            isBoldMode = false;
+            isBulletMode = false;
+            localStorage.removeItem("vt_saved_html");
+            updateCounts();
+        }
+    };
+
+    window.vtDownloadTxt = function() {
+        var text = (txtArea.innerText || "").trim();
+        if (!text) {
+            alert(TXT_DL_EMPTY);
+            return;
+        }
+
+        var now = new Date();
+        var day = String(now.getDate()).padStart(2, '0');
+        var month = String(now.getMonth() + 1).padStart(2, '0');
+        var year = now.getFullYear();
+        var currentDate = day + "-" + month + "-" + year;
+
+        var lastDate = localStorage.getItem('vt_lastDate');
+        var fileCount = parseInt(localStorage.getItem('vt_fileCount') || '0', 10);
+
+        if (lastDate === currentDate) {
+            fileCount += 1;
+        } else {
+            fileCount = 1;
+            lastDate = currentDate;
+        }
+
+        localStorage.setItem('vt_lastDate', currentDate);
+        localStorage.setItem('vt_fileCount', fileCount);
+
+        var fileName = "Voice-Article-" + currentDate + "-Part-" + fileCount + ".txt";
+        var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName;
+        a.click();
+    };
+
+    // ==========================================
+    // STF Integrated Logic - Selected Text Only
+    // ==========================================
+    
+    function updateAcronymMap() {
+        var acrInput = document.getElementById('acronymList');
+        if(!acrInput) return;
+        var list = acrInput.value.split(',').map(function(item) { return item.trim(); }).filter(Boolean);
+        cachedAcronymMap = {};
+        for (var i = 0; i < list.length; i++) {
+            cachedAcronymMap[list[i].toLowerCase()] = list[i];
+        }
+    }
+
+    window.saveAcronyms = function() {
+        var acrInput = document.getElementById('acronymList');
+        localStorage.setItem('custom_acronyms', acrInput.value);
+        updateAcronymMap();
+    };
+
+    function saveStfDraft() {
+        localStorage.setItem("vt_saved_html", txtArea.innerHTML);
+    }
+
+    function getTargetText() {
+        var sel = window.getSelection();
+        if (sel.rangeCount > 0) {
+            var range = sel.getRangeAt(0);
+            if (txtArea.contains(range.commonAncestorContainer) && !range.collapsed) {
+                return { text: sel.toString(), range: range, isSelection: true };
+            }
+        }
+        return { text: txtArea.innerText || "", range: null, isSelection: false };
+    }
+
+    function applyFormattedText(target, newText) {
+        if (target.isSelection) {
+            target.range.deleteContents();
+            target.range.insertNode(document.createTextNode(newText));
+            var sel = window.getSelection();
+            sel.removeAllRanges(); 
+        } else {
+            txtArea.innerText = newText;
+        }
+        updateCounts();
+        saveStfDraft();
+    }
+
+    window.toSmartTitleCase = function() {
+        var target = getTargetText();
+        if (!target.text) return;
+        var words = target.text.toLowerCase().split(/(\s+|[-_()/]+)/);
+        var result = '';
+        for (var i = 0; i < words.length; i++) {
+            var w = words[i];
+            if (!w || /^\s+$/.test(w) || /^[-_()/]+$/.test(w)) {
+                result += w;
+            } else if (cachedAcronymMap[w]) {
+                result += cachedAcronymMap[w];
+            } else {
+                result += w.charAt(0).toUpperCase() + w.slice(1);
+            }
+        }
+        applyFormattedText(target, result);
+    };
+
+    window.toSentenceCase = function() {
+        var target = getTargetText();
+        if (!target.text) return;
+        var str = target.text.toLowerCase();
+        var result = str.replace(/(^\s*\w|[.!?]\s*\w)/g, function(c) { return c.toUpperCase(); });
+        applyFormattedText(target, result);
+    };
+
+    window.toUpperCase = function() { 
+        var target = getTargetText();
+        if (!target.text) return;
+        applyFormattedText(target, target.text.toUpperCase()); 
+    };
+
+    window.toLowerCase = function() { 
+        var target = getTargetText();
+        if (!target.text) return;
+        applyFormattedText(target, target.text.toLowerCase());
+    };
+
+    window.toSlug = function() {
+        var target = getTargetText();
+        if (!target.text) return;
+        var str = target.text.toLowerCase().trim();
+        var result = str.replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-').replace(/^-+|-+$/g, '');
+        applyFormattedText(target, result);
+    };
+
+    window.slugToText = function() {
+        var target = getTargetText();
+        if (!target.text) return;
+        var str = target.text.trim().replace(/https?:\/\/[^\/]+\//g, '').replace(/\.html?$/i, '');
+        var result = str.replace(/[-_+/]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+        applyFormattedText(target, result);
+    };
+
+    window.slugToSmartTitle = function() { 
+        var target = getTargetText();
+        if (!target.text) return;
+        
+        var str = target.text.trim().replace(/https?:\/\/[^\/]+\//g, '').replace(/\.html?$/i, '');
+        str = str.replace(/[-_+/]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+        
+        var words = str.split(/(\s+|[-_()/]+)/);
+        var result = '';
+        for (var i = 0; i < words.length; i++) {
+            var w = words[i];
+            if (!w || /^\s+$/.test(w) || /^[-_()/]+$/.test(w)) {
+                result += w;
+            } else if (cachedAcronymMap[w]) {
+                result += cachedAcronymMap[w];
+            } else {
+                result += w.charAt(0).toUpperCase() + w.slice(1);
+            }
+        }
+        applyFormattedText(target, result);
+    };
+
+    window.translateEngine = async function(mode) {
+        var target = getTargetText();
+        var text = target.text.trim();
+        if (!text) return alert('Please select (highlight) or enter text to convert!');
+
+        var configs = {
+            'hi_en': { btnId: 'btn_hi_en', sl: 'hi', tl: 'en', dt: 't' },
+            'en_hi': { btnId: 'btn_en_hi', sl: 'en', tl: 'hi', dt: 't' },
+            'hi_hg': { btnId: 'btn_hi_hg', sl: 'hi', tl: 'en', dt: 'rm' },
+            'hg_hi': { btnId: 'btn_hg_hi', sl: 'en', tl: 'hi', dt: 't' } 
+        };
+
+        var conf = configs[mode];
+        var btn = document.getElementById(conf.btnId);
+        var originalBtnText = btn.innerText;
+
+        var cacheKey = mode + '_' + text;
+        if (stfCache[cacheKey]) {
+            applyFormattedText(target, stfCache[cacheKey]);
+            return;
+        }
+
+        btn.innerText = 'Wait...';
+        btn.disabled = true;
+
+        try {
+            var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' + conf.sl + '&tl=' + conf.tl + '&dt=' + conf.dt + '&q=' + encodeURIComponent(text);
+            var res = await fetch(url);
+            var data = await res.json();
+            
+            var converted = '';
+            if (data && data[0]) {
+                for (var i = 0; i < data[0].length; i++) {
+                    if (mode === 'hi_hg') {
+                        converted += (data[0][i][3] || data[0][i][0] || '');
+                    } else {
+                        converted += (data[0][i][0] || '');
+                    }
+                }
+            }
+            
+            if (converted) {
+                applyFormattedText(target, converted);
+                stfCache[cacheKey] = converted;
+                localStorage.setItem('stf_master_cache', JSON.stringify(stfCache));
+            }
+        } catch (e) {
+            alert('Network Error! Please check your internet connection.');
+        }
+
+        btn.innerText = originalBtnText;
+        btn.disabled = false;
+    };
+
+    var acrInput = document.getElementById('acronymList');
+    if (localStorage.getItem('custom_acronyms') && acrInput) {
+        acrInput.value = localStorage.getItem('custom_acronyms');
+    }
+    updateAcronymMap();
+    updateCounts();
+
+})();
+//]]>
+</script>
+
